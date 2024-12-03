@@ -17,3 +17,9 @@ export const getApplier = async (ano:number) => {
 
     return res.data
 }
+
+export const registryApplier = async (formData: FormData) => {
+    const res = await axios.post(`${host}`, formData)
+
+    return res.data
+}

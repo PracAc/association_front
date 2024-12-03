@@ -9,14 +9,11 @@ export interface IApplierList {
 export interface IApplierRead {
     ano: number;
 
+    bizNo:number;
+    openDate: string;
     name: string;
     email: string;
 
-    zipcode: string;
-    roadAddr: string;
-    lotNumAddr: string;
-    detailAddr: string;
-    addrEtc: string;
     applierStatus: string;
 
     attachFileNames: string[];

@@ -1,7 +1,6 @@
 import {useRef, useState} from 'react';
-import {bizValidateChk} from "../apis/bizAPI.ts";
-import {IBizChk} from "../types/applier/biz.ts";
-import {registryApplier} from "../apis/applierAPI.ts";
+import {IBizChk} from "../../types/applier/biz.ts";
+import {bizValidateChk} from "../../apis/bizAPI.ts";
 
 const InitialChk: IBizChk = {
     b_no: "",
@@ -10,32 +9,9 @@ const InitialChk: IBizChk = {
 };
 
 function RegistrationForm() {
-    // 사업자 등록증 진위여부 타입 상태
     const [bizChk, setBizChk] = useState<IBizChk>(InitialChk);
-    // 인증 여부 상태
-    const [isVerified, setIsVerified] = useState<boolean | null>(null);
-
-    // 파일 입력 상태
+    const [isVerified, setIsVerified] = useState<boolean>(false); // 인증 여부 상태
     const filesRef = useRef<HTMLInputElement>(null)
-    // 이메일 입력 상태
-    const [userEmail, setUserEmail] = useState<string>("");
-    const [errors, setErrors] = useState({
-        valid: isVerified,
-        email: true
-    });
-
-    // 유효성 검사 함수
-    const validateForm = () => {
-        const newErrors = { ...errors };
-
-        newErrors.valid = isVerified
-        newErrors.email = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(userEmail);
-
-        setErrors(newErrors);
-
-        // 유효성 검사 결과가 모두 false일 때만 true 반환
-        return Object.values(newErrors).every(value => value);
-    };
 
     // 인증 확인 버튼 클릭
     const handleVerify = () => {
@@ -46,40 +22,9 @@ function RegistrationForm() {
                 const valid = firstItem.valid;
 
                 setIsVerified( valid === '01' && bNo !== null ? true : false );
-            })
-            .catch(error => {
-                console.log(error);
-                setIsVerified(false)
             });
     };
 
-    // 제출 버튼 클릭 함수
-    const handleClickSubmit = () => {
-        if(validateForm()){
-            const files = filesRef?.current?.files;
-
-            const formData = new FormData();
-
-            if(files) {
-                for (let i = 0; i < files.length; i++) {
-                    formData.append("files", files[i])
-                    console.log(files[i]);
-                }
-            }
-
-            formData.append('bizNo',bizChk.b_no)
-            formData.append('name',bizChk.p_nm)
-            formData.append('openDate',bizChk.start_dt)
-            formData.append('email', userEmail)
-
-            registryApplier(formData)
-                .then(response => {
-                    if(response.status === 200){
-                        console.log("등록 성공!")
-                    }
-                })
-        }
-    }
 
     return (
         <div className="max-w-3xl mx-auto p-8 bg-white shadow-lg rounded-xl border border-gray-200">
@@ -137,15 +82,13 @@ function RegistrationForm() {
                 </div>
 
                 {/* 인증 결과 메시지 */}
-                {isVerified !== null && (
-                    <div className="mt-4 text-center">
-                        {isVerified ? (
-                            <span className="text-green-600 font-semibold">정상적으로 인증 되었습니다.</span>
-                        ) : (
-                            <span className="text-red-600 font-semibold">인증에 실패 하였습니다. 확인 후 다시 시도 해주세요.</span>
-                        )}
-                    </div>
-                )}
+                <div className="mt-4 text-center">
+                    {isVerified ? (
+                        <span className="text-green-600 font-semibold">정상적으로 인증 되었습니다.</span>
+                    ) : (
+                        <span className="text-red-600 font-semibold">인증에 실패 하였습니다. 확인 후 다시 시도 해주세요.</span>
+                    )}
+                </div>
             </div>
 
 
@@ -155,12 +98,9 @@ function RegistrationForm() {
                     <label className="block text-gray-600 mb-2 text-sm font-medium">이메일</label>
                     <input
                         type="text"
-                        value={userEmail}
-                        onChange={(e) => setUserEmail(e.target.value)}
                         placeholder="이메일을 입력하세요"
-                        className={`w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.email ? '' : 'border-red-500'}`}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
-                    {!errors.email && <span className="text-red-500 font-semibold">이메일형식에 맞게 입력 해주세요.</span>}
                 </div>
             </div>
             {/* 파일 입력 */}
@@ -171,7 +111,6 @@ function RegistrationForm() {
 
             {/* 제출 버튼 */}
             <button
-                onClick={handleClickSubmit}
                 className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-300"
             >
                 제출하기
