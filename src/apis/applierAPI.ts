@@ -23,3 +23,24 @@ export const registryApplier = async (formData: FormData) => {
 
     return res.data
 }
+
+export const modifyApplierStatus = async (ano: number, status: number) => {
+    const req = {
+        ano: ano,
+        status: status
+    }
+    const res = await axios.put(`${host}/modify`, req)
+
+    return res.data
+}
+
+export const checkApplierAuth = async (ano: number, email: string, authCode:string) => {
+    const req = {
+        ano: ano,
+        email: email,
+        authCode: authCode,
+    }
+    const res = await axios.post(`${host}/auth`, req)
+
+    return res.data
+}

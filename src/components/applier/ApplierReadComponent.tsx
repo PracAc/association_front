@@ -2,7 +2,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LoadingComponent from "../common/LoadingComponent.tsx";
 import { IApplierRead } from "../../types/applier/applier.ts";
-import { getApplier } from "../../apis/applierAPI.ts";
+import {getApplier, modifyApplierStatus} from "../../apis/applierAPI.ts";
 
 const InitialApplier: IApplierRead = {
     ano: 0,
@@ -23,7 +23,7 @@ function ApplierReadComponent() {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [modalOpen, setModalOpen] = useState(false);
-    // const [modalMessage, setModalMessage] = useState("");
+    const [modalMessage, setModalMessage] = useState("");
     const [applier, setApplier] = useState<IApplierRead>(InitialApplier);
 
     // 리스트 목록 이동
@@ -31,9 +31,26 @@ function ApplierReadComponent() {
         navigate(`/applier/list?${queryStr}`);
     };
 
+    // 승인 또는 반려 버튼 클릭 시 상태 변경
+    const handleClickStatus = (status: number) => {
+        // status 1 = 승인, 2 = 반려
+        setLoading(true)
+
+        modifyApplierStatus(Number(ano), status)
+            .then(() => {
+                setLoading(false);
+                setModalMessage(`${status === 1 ? "승인" : "반려"} 처리 되었습니다.`);
+                setModalOpen(true);
+        }).catch(() => {
+            setModalMessage(`${status === 1 ? "승인" : "반려"} 가 실패 되었습니다. \n 확인후 다시 해주시길 바랍니다.`);
+            setModalOpen(true);
+        });
+    };
+
     // 알림 모달 닫기
     const closeModal = () => {
         setModalOpen(false);
+        handleMoveToList();
     };
 
     useEffect(() => {
@@ -42,7 +59,7 @@ function ApplierReadComponent() {
             setApplier(data);
             setTimeout(() => {
                 setLoading(false);
-            }, 600);
+            }, 400);
         });
     }, [ano]);
 
@@ -118,7 +135,7 @@ function ApplierReadComponent() {
                         })}
             </div>
 
-            {/* 이미지 파일 그리드 */}
+            {/* 이미지 파일 리스트 */}
             <div className="grid grid-cols-3 gap-4">
                 {applier.attachFileNames &&
                     applier.attachFileNames
@@ -151,8 +168,12 @@ function ApplierReadComponent() {
 
     return (
         <div className="pt-5 pb-5 w-full mx-auto">
-            {loading && <LoadingComponent/>}
-            <div className="px-4 space-y-6">
+            {loading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
+                    <LoadingComponent />
+                </div>
+            )}
+            <div className={`px-4 space-y-6 ${loading ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
                 {/* 등록 정보 */}
                 <div className="flex gap-6">
                     {/* 등록번호 */}
@@ -208,12 +229,14 @@ function ApplierReadComponent() {
                     </button>
                     <div className="flex gap-3">
                         <button
+                            onClick={()=>handleClickStatus(1)}
                             className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50 transition duration-200"
                         >
                             승인
                         </button>
 
                         <button
+                            onClick={()=>handleClickStatus(2)}
                             className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-opacity-50 transition duration-200"
                         >
                             반려
@@ -226,7 +249,7 @@ function ApplierReadComponent() {
             {modalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30">
                     <div className="flex flex-col justify-center bg-white p-8 rounded-lg shadow-lg">
-                        {/*<p className="text-xl">{modalMessage}</p>*/}
+                        <p className="text-xl">{modalMessage}</p>
                         <button
                             onClick={closeModal}
                             className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 transition duration-200"

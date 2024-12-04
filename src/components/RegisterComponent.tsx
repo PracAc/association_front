@@ -2,6 +2,7 @@ import {useRef, useState} from 'react';
 import {bizValidateChk} from "../apis/bizAPI.ts";
 import {IBizChk} from "../types/applier/biz.ts";
 import {registryApplier} from "../apis/applierAPI.ts";
+import LoadingComponent from "./common/LoadingComponent.tsx";
 
 const InitialChk: IBizChk = {
     b_no: "",
@@ -10,10 +11,17 @@ const InitialChk: IBizChk = {
 };
 
 function RegistrationForm() {
+
+    const [loading, setLoading] = useState<boolean>(false);
+
     // 사업자 등록증 진위여부 타입 상태
     const [bizChk, setBizChk] = useState<IBizChk>(InitialChk);
     // 인증 여부 상태
     const [isVerified, setIsVerified] = useState<boolean | null>(null);
+
+    // 모달 상태
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
 
     // 파일 입력 상태
     const filesRef = useRef<HTMLInputElement>(null)
@@ -24,6 +32,13 @@ function RegistrationForm() {
         email: true
     });
 
+    // 알림 모달 닫기
+    const closeModal = () => {
+        setLoading(false);
+        setModalOpen(false);
+        // 모달 닫을시 이동처리 (추후처리)
+    };
+
     // 유효성 검사 함수
     const validateForm = () => {
         const newErrors = { ...errors };
@@ -33,7 +48,7 @@ function RegistrationForm() {
 
         setErrors(newErrors);
 
-        // 유효성 검사 결과가 모두 false일 때만 true 반환
+        // 유효성 검사 결과가 모두 true 일 때만 true 반환
         return Object.values(newErrors).every(value => value);
     };
 
@@ -55,6 +70,8 @@ function RegistrationForm() {
 
     // 제출 버튼 클릭 함수
     const handleClickSubmit = () => {
+        setLoading(true);
+
         if(validateForm()){
             const files = filesRef?.current?.files;
 
@@ -72,17 +89,34 @@ function RegistrationForm() {
             formData.append('openDate',bizChk.start_dt)
             formData.append('email', userEmail)
 
-            registryApplier(formData)
-                .then(response => {
-                    if(response.status === 200){
-                        console.log("등록 성공!")
-                    }
+            return registryApplier(formData)
+                .then(() => {
+                    setTimeout(() => {
+                        setLoading(false);
+                        setModalMessage(`성공적으로 등록이 완료되었습니다.`); // 성공 메시지
+                        setModalOpen(true);
+                    }, 400);
+                    // 등록후 input 초기화 처리 (추후처리)
                 })
+                .catch(() => {
+                    setModalMessage("등록에 실패했습니다."); // 실패 메시지
+                    setModalOpen(true);
+                });
         }
+
+        setTimeout(() => {
+            setLoading(false);
+            setModalMessage("사업자 등록번호 인증 혹은 이메일을 확인 해주시길바랍니다")
+            setModalOpen(true);
+        }, 400);
+        return
     }
+
+
 
     return (
         <div className="max-w-3xl mx-auto p-8 bg-white shadow-lg rounded-xl border border-gray-200">
+            {loading && <LoadingComponent/>}
             <h2 className="text-3xl font-semibold mb-6 text-gray-800">협회 등록 신청</h2>
 
             <div className="border border-gray-200 p-6 mb-6 rounded-lg shadow-sm bg-white">
@@ -176,6 +210,21 @@ function RegistrationForm() {
             >
                 제출하기
             </button>
+
+            {/* 알림 모달 */}
+            {modalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30">
+                    <div className="flex flex-col justify-center bg-white p-8 rounded-lg shadow-lg">
+                        <p className="text-xl">{modalMessage}</p>
+                        <button
+                            onClick={closeModal}
+                            className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 transition duration-200"
+                        >
+                            확인
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
