@@ -1,0 +1,42 @@
+
+import axios from "axios";
+import {IAdminlogin, ISigninParam} from "../types/iadminlogin.ts";
+
+const host = 'http://localhost:8080/api/association/login'
+
+export const postSignin = async (param: ISigninParam): Promise<IAdminlogin> => {
+    try {
+        const result = await axios.post(
+            `${host}/makeToken`,
+            JSON.stringify(param), // 요청 본문을 명시적으로 JSON 문자열로 보내기
+            {
+                headers: {
+                    'Content-Type': 'application/json' // JSON 데이터임을 명시
+                }
+            }
+        );
+        return result.data;
+    } catch (exception: any) {
+        //console.error(exception.response.data.message); // 에러 로그 추가
+        window.location.href = "/login?error=incorrect"
+        throw exception;
+    }
+}
+
+export const refreshRequest = async (accessToken: string, refreshToken: string): Promise<IAdminlogin> => {
+
+    const params = new URLSearchParams();
+    params.append('refreshToken', refreshToken);
+
+    const result = await axios.post(
+        `${host}/refreshToken`, params,
+        {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+    );
+
+    return result.data;
+}

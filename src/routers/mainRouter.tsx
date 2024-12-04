@@ -3,6 +3,7 @@ import {lazy, Suspense} from "react";
 
 
 const LoadingPage = lazy(() => import("../pages/LoadingPage.tsx"))
+const LoginPage = lazy(() => import("../pages/AdminLoginPage.tsx"))
 const RegisterPage = lazy(() => import("../pages/RegisterPage.tsx"))
 const AuthCheckPage = lazy(() => import("../pages/AuthCheckPage.tsx"))
 const ApplierIndex = lazy(() => import("../pages/applier/ApplierIndex.tsx"))
@@ -13,6 +14,14 @@ const ApplierReadPage = lazy(() => import("../pages/applier/ApplierReadPage.tsx"
 export const Loading = <LoadingPage></LoadingPage>
 
 const mainRouter = createBrowserRouter([
+    {
+        path: "",
+        element: <Navigate to="login" replace={true}/>
+    },
+    {
+        path: "/login",
+        element: <Suspense fallback={Loading}><LoginPage/></Suspense>
+    },
     {
         path: "/auth/:ano",
         element: <Suspense fallback={Loading}><AuthCheckPage/></Suspense>

@@ -2,6 +2,7 @@
 export interface IApplierList {
     ano: number;
     name: string;
+    bizNo: string;
     regDate: string;
     regStatus: string;
 }
@@ -9,7 +10,7 @@ export interface IApplierList {
 export interface IApplierRead {
     ano: number;
 
-    bizNo:number;
+    bizNo:string;
     openDate: string;
     name: string;
     email: string;
