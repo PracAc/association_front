@@ -48,7 +48,7 @@ function ApplierListComponent() {
     // 검색 핸들러
     const handleSearch = () => {
         setLoading(true);
-        getApplierList(page, size, filters).then((data) => {
+        getApplierList(1, size, filters).then((data) => {
             setPageResponse(data);
             setLoading(false);
         }).catch((error) => {

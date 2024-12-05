@@ -33,6 +33,7 @@ const useSignin = () => {
     }
 
     const doSignout = () => {
+
         dispatch(signout())
         cookies.remove("adminlogin", {path:"/"})
     }
