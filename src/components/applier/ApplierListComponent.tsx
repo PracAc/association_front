@@ -83,8 +83,16 @@ function ApplierListComponent() {
     };
 
     useEffect(() => {
+
+
+        // // 로그인 쿠키가 없다면 로그인 페이지로 리디렉션
+        // if (!adminLoginCookie) {
+        //     navigate("/login");
+        // }
+
         setLoading(true);
         getApplierList(page, size, filters).then((data) => {
+            console.log(data)
             setPageResponse(data);
             setTimeout(() => {
                 setLoading(false);

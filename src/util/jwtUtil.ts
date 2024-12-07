@@ -9,8 +9,11 @@ const jwtAxios = axios.create();
 const beforeReq = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
     const adminLoginCookie = cookies.get("adminlogin");
 
+    console.log("beforeReq: TEST REQ");
+
     if (!adminLoginCookie) {
-        throw new Error('AdminLogin Cookies are not found.');
+        console.log('AdminLogin Cookies are not found.');
+        return config
     }
 
     const accessToken = adminLoginCookie.accessToken;
@@ -23,6 +26,7 @@ const beforeReq = (config: InternalAxiosRequestConfig): InternalAxiosRequestConf
 };
 
 const failReq = (error: any) => {
+    console.log("beforeReq: TEST REQ");
     console.log("fail request");
     return Promise.reject(error);
 };
@@ -39,9 +43,9 @@ const failRes = async (error: any) => {
 
     console.log("failRes triggered:", error);
 
+    console.log(error.response)
     // 응답의 메시지에서 access token 만료나 refresh token 만료 여부를 판단
     if (error.response.data.msg === "Access Token just Expired!!!") {
-        console.log("if문 안에서 실행됨")
 
         const adminloginCookie = cookies.get("adminlogin");
 

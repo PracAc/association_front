@@ -13,8 +13,9 @@ function AdminLoginPage() {
         }
     }, [loginInfo]); // adminlogin 전체를 의존성 배열에 넣어 상태 변경을 감지
 
+
     if (isRedirecting) {
-        return <Navigate to="/applier/list" replace />; // 리디렉션 처리
+        return <Navigate to="/applier/list" replace={true} />; // 리디렉션 처리
     }
 
     return (

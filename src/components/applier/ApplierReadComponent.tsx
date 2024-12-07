@@ -6,7 +6,7 @@ import {getApplier, modifyApplierStatus} from "../../apis/applierAPI.ts";
 
 const InitialApplier: IApplierRead = {
     ano: 0,
-    bizNo:0,
+    bizNo:"",
     openDate: "",
     name: "",
     email: "",

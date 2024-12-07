@@ -23,7 +23,6 @@ export const getApplierList = async (page?: number, size?: number, filters?: {})
             }
         }
     }
-
     const res = await jwtAxios.get(`${host}/list?${queryParams.toString()}`);
     return res.data;
 };

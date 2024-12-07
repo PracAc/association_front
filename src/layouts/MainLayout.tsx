@@ -9,6 +9,11 @@ function BasicLayout({children}: { children: React.ReactNode }) {
     const {doSignout} = useSignin();
     const navigate = useNavigate();
 
+    const handleClickSignout = () => {
+        doSignout()
+        navigate({pathname: "/login"})
+    }
+
     return (
         <div className={`flex h-screen bg-gray-50 max-w-[120rem] m-auto`}>
             {/* Desktop sidebar */}
@@ -18,10 +23,7 @@ function BasicLayout({children}: { children: React.ReactNode }) {
                 <header className="z-10 py-4 bg-side-navy">
                     <div className="w-full flex justify-end px-6">
                         <button
-                            onClick={()=>{
-                                doSignout
-                                navigate({pathname:"/login"})
-                            }}
+                            onClick={handleClickSignout}
                             className="px-6 py-2 text-white rounded-full bg-neutral-700 hover:bg-neutral-500 focus:outline-none hover:text-black focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition-colors duration-300">
                             Logout
                         </button>
