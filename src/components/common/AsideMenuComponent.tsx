@@ -1,28 +1,26 @@
 import {Link} from "react-router-dom";
 import Depth1Menu from "./Depth1Menu.tsx";
 
-import logo from "../../assets/img/logo.png"
-
-interface subMenusProps{
+interface subMenusProps {
     name: string,
-    toPath:string
+    toPath: string
 }
 
 interface Depth1MenuProps {
-    mainName:string,
-    subMenus:subMenusProps[],
-    basicPath:string,
-    iconName:string
+    mainName: string,
+    subMenus: subMenusProps[],
+    basicPath: string,
+    iconName: string
 }
 
 function AsideMenuComponent() {
 
-    const m1:Depth1MenuProps = {
-        mainName:"신청관리",
-        subMenus:[
-            {name:"신청목록",toPath:"/list"}
+    const m1: Depth1MenuProps = {
+        mainName: "신청관리",
+        subMenus: [
+            {name: "신청목록", toPath: "/list"}
         ],
-        basicPath:"/applier",
+        basicPath: "/applier",
         iconName: "users.png"
     }
 
@@ -32,8 +30,10 @@ function AsideMenuComponent() {
             <div className="py-4 text-neutral-800">
 
                 {/* 로고 부분 */}
-                <Link to="/main" className="flex items-center justify-center mb-4 p-2">
-                       <img src={logo} alt='/logo' className='px-16'/>
+                <Link to="/applier/list" className="flex items-center justify-center mb-4 p-2">
+                       <span className="flex items-center justify-center text-lg font-semibold">
+                          협회 관리자
+                       </span>
                 </Link>
 
                 {/* 1Depth 메뉴 */}

@@ -1,165 +1,232 @@
+import {useRef, useState} from 'react';
+import {bizValidateChk} from "../apis/bizAPI.ts";
+import {IBizChk} from "../types/applier/biz.ts";
+import {registryApplier} from "../apis/applierAPI.ts";
+import LoadingComponent from "./common/LoadingComponent.tsx";
 
-import {useDaumPostcodePopup} from "react-daum-postcode";
-import React from "react";
-
-
-const Postcode = () => {
-    const open = useDaumPostcodePopup();
-
-    const handleComplete = (data) => {
-        console.log(data)
-        let fullAddress = data.address;
-        let extraAddress = '';
-
-        if (data.addressType === 'R') {
-            if (data.bname !== '') {
-                extraAddress += data.bname;
-            }
-            if (data.buildingName !== '') {
-                extraAddress += extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName;
-            }
-            fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
-        }
-
-        console.log(fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
-    };
-
-    const handleClick = () => {
-        open({ onComplete: handleComplete });
-    };
-
-    return (
-        <button className="min-w-fit" type='button' onClick={handleClick}>
-            Open
-        </button>
-    );
+const InitialChk: IBizChk = {
+    b_no: "",
+    p_nm: "",
+    start_dt: "",
 };
 
-function RegisterComponent() {
+function RegistrationForm() {
+
+    const [loading, setLoading] = useState<boolean>(false);
+
+    // 사업자 등록증 진위여부 타입 상태
+    const [bizChk, setBizChk] = useState<IBizChk>(InitialChk);
+    // 인증 여부 상태
+    const [isVerified, setIsVerified] = useState<boolean | null>(null);
+
+    // 모달 상태
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
+
+    // 파일 입력 상태
+    const filesRef = useRef<HTMLInputElement>(null)
+    // 이메일 입력 상태
+    const [userEmail, setUserEmail] = useState<string>("");
+    const [errors, setErrors] = useState({
+        valid: isVerified,
+        email: true
+    });
+
+    // 알림 모달 닫기
+    const closeModal = () => {
+        setLoading(false);
+        setModalOpen(false);
+        // 모달 닫을시 이동처리 (추후처리)
+    };
+
+    // 유효성 검사 함수
+    const validateForm = () => {
+        const newErrors = { ...errors };
+
+        newErrors.valid = isVerified
+        newErrors.email = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(userEmail);
+
+        setErrors(newErrors);
+
+        // 유효성 검사 결과가 모두 true 일 때만 true 반환
+        return Object.values(newErrors).every(value => value);
+    };
+
+    // 인증 확인 버튼 클릭
+    const handleVerify = () => {
+        bizValidateChk(bizChk)
+            .then(response => {
+                const firstItem = response.data[0];
+                const bNo = firstItem.b_no;
+                const valid = firstItem.valid;
+
+                setIsVerified( valid === '01' && bNo !== null ? true : false );
+            })
+            .catch(error => {
+                console.log(error);
+                setIsVerified(false)
+            });
+    };
+
+    // 제출 버튼 클릭 함수
+    const handleClickSubmit = () => {
+        setLoading(true);
+
+        if(validateForm()){
+            const files = filesRef?.current?.files;
+
+            const formData = new FormData();
+
+            if(files) {
+                for (let i = 0; i < files.length; i++) {
+                    formData.append("files", files[i])
+                    console.log(files[i]);
+                }
+            }
+
+            formData.append('bizNo',bizChk.b_no)
+            formData.append('name',bizChk.p_nm)
+            formData.append('openDate',bizChk.start_dt)
+            formData.append('email', userEmail)
+
+            return registryApplier(formData)
+                .then(() => {
+                    setTimeout(() => {
+                        setLoading(false);
+                        setModalMessage(`성공적으로 등록이 완료되었습니다.`); // 성공 메시지
+                        setModalOpen(true);
+                    }, 400);
+                    // 등록후 input 초기화 처리 (추후처리)
+                })
+                .catch(() => {
+                    setModalMessage("등록에 실패했습니다."); // 실패 메시지
+                    setModalOpen(true);
+                });
+        }
+
+        setTimeout(() => {
+            setLoading(false);
+            setModalMessage("사업자 등록번호 인증 혹은 이메일을 확인 해주시길바랍니다")
+            setModalOpen(true);
+        }, 400);
+        return
+    }
+
+
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <div className="max-w-4xl w-full p-6 bg-white rounded-lg shadow-md">
-                <h2 className="text-2xl font-semibold text-center mb-4">협회 가입 신청</h2>
-                <form className="space-y-4">
-                    {/* 사업자 번호 */}
-                    <div>
-                        <label htmlFor="businessNumber" className="block text-sm font-medium text-gray-700">
-                            사업자 번호
-                        </label>
+        <div className="max-w-3xl mx-auto p-8 bg-white shadow-lg rounded-xl border border-gray-200">
+            {loading && <LoadingComponent/>}
+            <h2 className="text-3xl font-semibold mb-6 text-gray-800">협회 등록 신청</h2>
+
+            <div className="border border-gray-200 p-6 mb-6 rounded-lg shadow-sm bg-white">
+                <h3 className="text-2xl font-semibold mb-6 text-gray-800">사업자 정보 확인</h3>
+
+                {/* 사업자등록번호 & 성명 (대표자) */}
+                <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col">
+                        <label className="block text-gray-600 mb-2 text-sm font-medium">사업자등록번호</label>
+                        <input
+                            type="text"
+                            placeholder="사업자등록번호를 입력하세요"
+                            value={bizChk.b_no}
+                            onChange={(e) => setBizChk({...bizChk, b_no: e.target.value})}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+
+                    <div className="flex flex-col">
+                        <label className="block text-gray-600 mb-2 text-sm font-medium">성명 (대표자)</label>
+                        <input
+                            type="text"
+                            placeholder="성명을 입력하세요"
+                            value={bizChk.p_nm}
+                            onChange={(e) => setBizChk({...bizChk, p_nm: e.target.value})}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+                </div>
+
+                {/* 개업일 & 인증확인 */}
+                <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col">
+                        <label className="block text-gray-600 mb-2 text-sm font-medium">개업일</label>
                         <div className="flex gap-2">
                             <input
-                                type="text"
-                                id="businessNumber"
-                                name="businessNumber"
-                                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                                placeholder="사업자 번호를 입력하세요"
-                                required
+                                type="date"
+                                value={bizChk.start_dt}
+                                onChange={(e) => setBizChk({...bizChk, start_dt: e.target.value})}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
-                            <button className="min-w-fit">
-                                번호 인증
+                            {/* 인증 확인 버튼 */}
+                            <button
+                                type="button"
+                                onClick={handleVerify}
+                                className={`min-w-fit p-3 rounded-lg text-white font-medium ${isVerified ? 'bg-green-400' : 'bg-gray-400'} focus:outline-none hover:bg-opacity-90 transition duration-200`}
+                            >
+                                {isVerified ? '인증 완료' : '인증 확인'}
                             </button>
                         </div>
                     </div>
+                </div>
 
-                    {/* 이름 */}
-                    <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                            이름
-                        </label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="이름을 입력하세요"
-                            required
-                        />
+                {/* 인증 결과 메시지 */}
+                {isVerified !== null && (
+                    <div className="mt-4 text-center">
+                        {isVerified ? (
+                            <span className="text-green-600 font-semibold">정상적으로 인증 되었습니다.</span>
+                        ) : (
+                            <span className="text-red-600 font-semibold">인증에 실패 하였습니다. 확인 후 다시 시도 해주세요.</span>
+                        )}
                     </div>
+                )}
+            </div>
 
-                    {/* 이메일 */}
-                    <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                            이메일
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="이메일을 입력하세요"
-                            required
-                        />
-                    </div>
 
-                    {/* 주소 */}
-                    <div>
-                        <div>
-                            {/* 우편번호 */}
-                            <div className="mt-4">
-                                <label className="block text-sm font-medium text-gray-700">우편번호</label>
-                                <div className="flex gap-2 items-center">
-                                    <input
-                                        type="text"
-                                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="우편번호"
-                                        disabled
-                                    />
-                                    {/* 주소 검색 버튼 */}
-                                    <Postcode/>
-                                </div>
-                            </div>
-                        </div>
+            {/* 이메일 */}
+            <div className="mb-6 grid grid-cols-1 gap-4">
+                <div className="flex flex-col">
+                    <label className="block text-gray-600 mb-2 text-sm font-medium">이메일</label>
+                    <input
+                        type="text"
+                        value={userEmail}
+                        onChange={(e) => setUserEmail(e.target.value)}
+                        placeholder="이메일을 입력하세요"
+                        className={`w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.email ? '' : 'border-red-500'}`}
+                    />
+                    {!errors.email && <span className="text-red-500 font-semibold">이메일형식에 맞게 입력 해주세요.</span>}
+                </div>
+            </div>
+            {/* 파일 입력 */}
+            <div className="mb-6">
+                <label className="block text-gray-600 mb-2 text-sm font-medium">첨부 파일 (포트폴리오)</label>
+                <input type="file" ref={filesRef} multiple={true} className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+            </div>
 
-                        <div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">주소</label>
-                                <input
-                                    type="text"
-                                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="주소를 입력하세요"
-                                    disabled // 검색된 주소를 수정할 수 없도록 비활성화
-                                />
-                            </div>
+            {/* 제출 버튼 */}
+            <button
+                onClick={handleClickSubmit}
+                className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-300"
+            >
+                제출하기
+            </button>
 
-                            {/* 추가 주소 */}
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">상세 주소</label>
-                                <input
-                                    type="text"
-                                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="상세 주소를 입력하세요"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* 첨부파일 */}
-                    <div>
-                        <label htmlFor="file" className="block text-sm font-medium text-gray-700">
-                            첨부파일
-                        </label>
-                        <input
-                            type="file"
-                            id="file"
-                            name="file"
-                            className="mt-1 block w-full text-sm text-gray-700 border border-gray-300 rounded-md"
-                        />
-                    </div>
-
-                    {/* 제출 버튼 */}
-                    <div>
+            {/* 알림 모달 */}
+            {modalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30">
+                    <div className="flex flex-col justify-center bg-white p-8 rounded-lg shadow-lg">
+                        <p className="text-xl">{modalMessage}</p>
                         <button
-                            type="submit"
-                            className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
+                            onClick={closeModal}
+                            className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 transition duration-200"
                         >
-                            제출
+                            확인
                         </button>
                     </div>
-                </form>
-            </div>
+                </div>
+            )}
         </div>
     );
 }
 
-export default RegisterComponent;
+export default RegistrationForm;

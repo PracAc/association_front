@@ -2,6 +2,7 @@
 export interface IApplierList {
     ano: number;
     name: string;
+    bizNo: string;
     regDate: string;
     regStatus: string;
 }
@@ -9,14 +10,11 @@ export interface IApplierList {
 export interface IApplierRead {
     ano: number;
 
+    bizNo:string;
+    openDate: string;
     name: string;
     email: string;
 
-    zipcode: string;
-    roadAddr: string;
-    lotNumAddr: string;
-    detailAddr: string;
-    addrEtc: string;
     applierStatus: string;
 
     attachFileNames: string[];
