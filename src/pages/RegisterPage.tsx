@@ -3,7 +3,7 @@ import RegisterComponent from "../components/RegisterComponent.tsx";
 
 function RegisterPage() {
     return (
-        <div>
+        <div className="flex justify-center items-center min-h-screen bg-gray-100">
             <RegisterComponent/>
         </div>
     );

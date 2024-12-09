@@ -1,6 +1,6 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { Cookies } from "react-cookie";
-import { refreshRequest } from "../apis/adminlogin/adminloginAPI.ts";
+import {refreshRequest} from "../apis/adminloginAPI.ts";
 
 const cookies = new Cookies();
 const jwtAxios = axios.create();
