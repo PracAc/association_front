@@ -9,14 +9,6 @@ on:
       - main
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Deploy to production
-        run: |
-          curl -H "Authorization: Bearer ${{ secrets.API_KEY }}" https://api.example.com/deploy
-
   build:
     runs-on: ubuntu-latest
 
@@ -33,6 +25,10 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      # 3. Set up environment variables from GitHub Secrets and create .env file
+      - name: Create .env file for React app
+        run: echo "VITE_BIZ_SERVICE_KEY=${{ secrets.VITE_BIZ_SERVICE_KEY }}" > .env
 
       # 3. Run tests
       - name: Run tests
