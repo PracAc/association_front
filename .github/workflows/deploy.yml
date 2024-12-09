@@ -9,6 +9,14 @@ on:
       - main
 
 jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to production
+        run: |
+          curl -H "Authorization: Bearer ${{ secrets.API_KEY }}" https://api.example.com/deploy
+
   build:
     runs-on: ubuntu-latest
 
