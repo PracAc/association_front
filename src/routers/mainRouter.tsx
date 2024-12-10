@@ -20,7 +20,7 @@ const mainRouter = createBrowserRouter([
     },
     {
         path: "/login",
-        element: <Suspense fallback={Loading}><LoginPage/></Suspense>
+        element: <LoginPage/>
     },
     {
         path: "/auth/:ano",
