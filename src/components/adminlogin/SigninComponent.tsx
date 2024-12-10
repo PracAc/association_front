@@ -1,7 +1,7 @@
 import { ISigninParam } from "../../types/iadminlogin.ts";
 import { ChangeEvent, useEffect, useState } from "react";
 import useSignin from "../../hooks/useSignin.ts";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 
 const initialState: ISigninParam = {
     adminId: '',
@@ -14,7 +14,6 @@ function SigninComponent() {
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const [rememberId, setRememberId] = useState(false)
     const location = useLocation()
-    const navigate = useNavigate()
 
     useEffect(() => {
         const savedId = localStorage.getItem("rememberedAdminId");
@@ -31,17 +30,16 @@ function SigninComponent() {
         } else if (errorType === "incorrect" && !errorMessage) {
             setErrorMessage("아이디나 패스워드가 틀립니다. 다시 로그인 해주세요.");
         }
-    }, [location.search, errorMessage]); // errorMessage가 변경될 때만 실행되도록 설정
+    }, [errorMessage]); // errorMessage가 변경될 때만 실행되도록 설정
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setParam((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
+    const handleClick = () => {
         try {
-            await doSignin(param);
+            doSignin(param);
 
             // "아이디 저장"이 선택되었으면 로컬 스토리지에 adminId 저장
             if (rememberId) {
@@ -49,9 +47,6 @@ function SigninComponent() {
             } else {
                 localStorage.removeItem("rememberedAdminId"); // 체크 해제 시 로컬 스토리지에서 삭제
             }
-
-            // 로그인 성공 후, 등록자 목록으로 이동
-            navigate("/applier")
         } catch (exception:any) {
             // 로그인 실패 시 error 처리 (이미 처리된 메시지 출력)
             console.log(exception.response?.data?.message || exception.message);
@@ -74,7 +69,7 @@ function SigninComponent() {
                     </div>
                 )}
 
-                <form>
+                <div>
                     <div className="mb-6">
                         <input
                             type="text"
@@ -114,7 +109,7 @@ function SigninComponent() {
                     >
                         로그인
                     </button>
-                </form>
+                </div>
             </div>
         </div>
     );
