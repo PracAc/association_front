@@ -5,7 +5,7 @@ export interface IBizChk {
     "p_nm": string;
 }
 
-export interface IBizValidChk {
-    "b_no": string;
-    "valid": string;
+export interface INoBizChk {
+    "name": string;
+    "s_link": string;
 }
