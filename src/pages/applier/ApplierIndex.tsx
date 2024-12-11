@@ -1,14 +1,14 @@
-import BasicLayout from "../../layouts/MainLayout.tsx";
 import {Outlet} from "react-router-dom";
+import AdminMainLayout from "../../layouts/AdminMainLayout.tsx";
 
 
 function ApplierIndex() {
     return (
-        <BasicLayout>
+        <AdminMainLayout>
             <div>
                 <Outlet></Outlet>
             </div>
-        </BasicLayout>
+        </AdminMainLayout>
     );
 }
 
