@@ -1,46 +1,39 @@
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import Depth1Menu from "./Depth1Menu.tsx";
 
-interface subMenusProps {
-    name: string,
-    toPath: string
-}
-
-interface Depth1MenuProps {
-    mainName: string,
-    subMenus: subMenusProps[],
-    basicPath: string,
-    iconName: string
-}
-
 function AsideMenuComponent() {
-
-    const m1: Depth1MenuProps = {
-        mainName: "신청관리",
-        subMenus: [
-            {name: "신청목록", toPath: "/list"}
-        ],
-        basicPath: "/applier",
-        iconName: "users.png"
-    }
-
+    const menus = [
+        {
+            mainName: "신청관리",
+            subMenus: [{ name: "신청목록", toPath: "/list" }],
+            basicPath: "/applier",
+            iconName: "users.png",
+        },
+        {
+            mainName: "공지 관리",
+            subMenus: [
+                { name: "공지 목록", toPath: "/list" },
+            ],
+            basicPath: "/notice",
+            iconName: "category.png",
+        },
+    ];
 
     return (
-        <aside className="z-20 hidden w-64 overflow-y-auto bg-side-navy md:block flex-shrink-0">
-            <div className="py-4 text-neutral-800">
-
-                {/* 로고 부분 */}
-                <Link to="/applier/list" className="flex items-center justify-center mb-4 p-2">
-                       <span className="flex items-center justify-center text-lg font-semibold">
-                          협회 관리자
-                       </span>
+        <aside className="z-20 hidden w-64 bg-gray-100 md:block flex-shrink-0 border-r border-gray-200 shadow-sm">
+            <div className="py-6 text-center">
+                <Link
+                    to="/applier/list"
+                    className="block text-lg font-bold text-blue-800 hover:text-blue-600"
+                >
+                    협회 관리자
                 </Link>
-
-                {/* 1Depth 메뉴 */}
-                <ul className="mt-6 space-y-2 text-txt-grey">
-                    <Depth1Menu {...m1}></Depth1Menu>
-                </ul>
             </div>
+            <ul className="px-4 space-y-2">
+                {menus.map((menu, index) => (
+                    <Depth1Menu key={index} {...menu} />
+                ))}
+            </ul>
         </aside>
     );
 }

@@ -1,5 +1,6 @@
 import {createBrowserRouter, Navigate} from "react-router-dom";
 import {lazy, Suspense} from "react";
+import noticeRouter from "./noticeRouter.tsx";
 
 
 const LoadingPage = lazy(() => import("../pages/LoadingPage.tsx"))
@@ -51,7 +52,8 @@ const mainRouter = createBrowserRouter([
                 element: <Suspense fallback={Loading}><ApplierReadPage/></Suspense>
             }
         ]
-    }
+    },
+    noticeRouter
 
 ])
 
