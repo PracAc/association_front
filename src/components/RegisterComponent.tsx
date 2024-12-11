@@ -1,6 +1,6 @@
 import {useRef, useState} from 'react';
 import {bizValidateChk} from "../apis/bizAPI.ts";
-import {IBizChk} from "../types/applier/biz.ts";
+import {IBizChk, INoBizChk} from "../types/applier/biz.ts";
 import {registryApplier} from "../apis/applierAPI.ts";
 import LoadingComponent from "./common/LoadingComponent.tsx";
 
@@ -10,12 +10,25 @@ const InitialChk: IBizChk = {
     start_dt: "",
 };
 
+const SecondChk: INoBizChk = {
+    name: "",
+    s_link: "",
+};
+
+
 function RegisterComponent() {
 
     const [loading, setLoading] = useState<boolean>(false);
 
     // 사업자 등록증 진위여부 타입 상태
     const [bizChk, setBizChk] = useState<IBizChk>(InitialChk);
+
+    // 사업자 등록증 진위여부 타입 상태
+    const [noBizChk, setNoBizChk] = useState<INoBizChk>(SecondChk);
+
+    // 휴대폰 번호 상태
+    const [phoneNumber , setPhoneNumber ] = useState<string>("")
+
     // 인증 여부 상태
     const [isVerified, setIsVerified] = useState<boolean | null>(null);
     const [activeTab, setActiveTab] = useState("hasNumber");
@@ -31,6 +44,7 @@ function RegisterComponent() {
     const [errors, setErrors] = useState({
         valid: isVerified,
         email: true
+
     });
 
     // 알림 모달 닫기
@@ -53,6 +67,8 @@ function RegisterComponent() {
         return Object.values(newErrors).every(value => value);
     };
 
+
+
     // 인증 확인 버튼 클릭
     const handleVerify = () => {
         bizValidateChk(bizChk)
@@ -69,50 +85,78 @@ function RegisterComponent() {
             });
     };
 
-    // 제출 버튼 클릭 함수
-    const handleClickSubmit = () => {
-        setLoading(true);
+        // 제출 버튼 클릭 함수
+        const handleClickSubmit = () => {
+            console.log(`활성 탭: ${activeTab}`);
 
-        if(validateForm()){
-            const files = filesRef?.current?.files;
-
-            const formData = new FormData();
-
-            if(files) {
-                for (let i = 0; i < files.length; i++) {
-                    formData.append("files", files[i])
-                    console.log(files[i]);
-                }
+            if (activeTab === "hasNumber") {
+                // 사업자등록번호가 있는 경우
+                console.log("사업자 등록번호 있음");
+                console.log(`사업자등록번호: ${bizChk.b_no}`);
+                console.log(`대표자 성명: ${bizChk.p_nm}`);
+                console.log(`개업일: ${bizChk.start_dt}`);
+                console.log(`인증 상태: ${isVerified}`);
+            } else {
+                // 사업자등록번호가 없는 경우
+                console.log("사업자 등록번호 없음");
+                console.log(`대표자 성명: ${noBizChk.name}`);
+                console.log(`블로그 주소: ${noBizChk.s_link}`);
+                console.log(`입력된 이메일: ${userEmail}`);
+                console.log(`휴대폰 번호: ${phoneNumber}`);
             }
 
-            formData.append('bizNo',bizChk.b_no)
-            formData.append('name',bizChk.p_nm)
-            formData.append('openDate',bizChk.start_dt)
-            formData.append('email', userEmail)
+            // 유효성 검사 후 추가 로직 처리
+            if (validateForm()) {
+                console.log("유효성 검사 통과");
+                setLoading(true);
+                // API 호출 등 제출 로직 추가
+            } else {
+                console.log("유효성 검사 실패");
+                setModalMessage("입력 값을 확인하세요.");
+                setModalOpen(true);
+            }
+        };
 
-            return registryApplier(formData)
-                .then(() => {
-                    setTimeout(() => {
-                        setLoading(false);
-                        setModalMessage(`성공적으로 등록이 완료되었습니다.`); // 성공 메시지
-                        setModalOpen(true);
-                    }, 400);
-                    // 등록후 input 초기화 처리 (추후처리)
-                })
-                .catch(() => {
-                    setModalMessage("등록에 실패했습니다."); // 실패 메시지
-                    setModalOpen(true);
-                });
-        }
-
-        setTimeout(() => {
-            setLoading(false);
-            setModalMessage("사업자 등록번호 인증 혹은 이메일을 확인 해주시길바랍니다")
-            setModalOpen(true);
-        }, 400);
-        return
-    }
-
+        // setLoading(true);
+        //
+        // if(validateForm()){
+        //     const files = filesRef?.current?.files;
+        //
+        //     const formData = new FormData();
+        //
+        //     if(files) {
+        //         for (let i = 0; i < files.length; i++) {
+        //             formData.append("files", files[i])
+        //             console.log(files[i]);
+        //         }
+        //     }
+        //
+        //     formData.append('bizNo',bizChk.b_no)
+        //     formData.append('name',bizChk.p_nm)
+        //     formData.append('openDate',bizChk.start_dt)
+        //     formData.append('email', userEmail)
+        //
+        //     return registryApplier(formData)
+        //         .then(() => {
+        //             setTimeout(() => {
+        //                 setLoading(false);
+        //                 setModalMessage(`성공적으로 등록이 완료되었습니다.`); // 성공 메시지
+        //                 setModalOpen(true);
+        //             }, 400);
+        //             // 등록후 input 초기화 처리 (추후처리)
+        //         })
+        //         .catch(() => {
+        //             setModalMessage("등록에 실패했습니다."); // 실패 메시지
+        //             setModalOpen(true);
+        //         });
+        // }
+        //
+        // setTimeout(() => {
+        //     setLoading(false);
+        //     setModalMessage("사업자 등록번호 인증 혹은 이메일을 확인 해주시길바랍니다")
+        //     setModalOpen(true);
+        // }, 400);
+        // return
 
 
     return (
@@ -122,7 +166,7 @@ function RegisterComponent() {
                 <h2 className="text-3xl font-semibold mb-6 text-gray-800">협회 등록 신청</h2>
 
                 {/* 탭 전환 */}
-                <div className="mb-6 flex space-x-4">
+                <div className="mb-6 flex space-x-4 mt-10">
                     <button
                         className={`p-2 rounded-lg font-medium ${activeTab === "hasNumber" ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-800"}`}
                         onClick={() => setActiveTab("hasNumber")}
@@ -139,7 +183,7 @@ function RegisterComponent() {
 
                 {activeTab === "hasNumber" ? (
                     <>
-                        {/* 사업자등록번호 & 성명 (대표자) */}
+                        {/* 1 사업자등록번호 & 성명 (대표자) */}
                         <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="flex flex-col">
                                 <label className="block text-gray-600 mb-2 text-sm font-medium">사업자등록번호</label>
@@ -200,33 +244,26 @@ function RegisterComponent() {
                     </>
                 ) : (
                     <>
-                        {/* 성명 & 블로그 & 인스타 주소 */}
+                        {/* 성명 & SNS주소 */}
                         <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="flex flex-col">
                                 <label className="block text-gray-600 mb-2 text-sm font-medium">성명</label>
                                 <input
                                     type="text"
                                     placeholder="성명을 입력하세요"
-                                    value={bizChk.p_nm}
-                                    onChange={(e) => setBizChk({ ...bizChk, p_nm: e.target.value })}
+                                    value={noBizChk.name}
+                                    onChange={(e) => setNoBizChk({ ...noBizChk, name: e.target.value })}
                                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
 
                             <div className="flex flex-col">
-                                <label className="block text-gray-600 mb-2 text-sm font-medium">블로그 주소</label>
+                                <label className="block text-gray-600 mb-2 text-sm font-medium">SNS 주소</label>
                                 <input
                                     type="text"
-                                    placeholder="블로그 주소를 입력하세요"
-                                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-
-                            <div className="flex flex-col">
-                                <label className="block text-gray-600 mb-2 text-sm font-medium">인스타그램 주소</label>
-                                <input
-                                    type="text"
-                                    placeholder="인스타그램 주소를 입력하세요"
+                                    placeholder="SNS 주소를 입력하세요"
+                                    value={noBizChk.s_link}
+                                    onChange={(e) => setNoBizChk({ ...noBizChk, s_link: e.target.value })}
                                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
@@ -258,6 +295,8 @@ function RegisterComponent() {
                         <input
                             type="text"
                             placeholder="연락처를 입력하세요"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
                             className={`w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
                     </div>
