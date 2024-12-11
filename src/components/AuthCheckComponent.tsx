@@ -13,6 +13,9 @@ function AuthCheckComponent() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     // 모달 메세지 상태
     const [modalMessage, setModalMessage] = useState("");
+    // 모달 내용 상태
+    const [modalContent, setModalContent] = useState("");
+
     // 로딩 상태
     const [loading, setLoading] = useState(false);
 
@@ -29,12 +32,15 @@ function AuthCheckComponent() {
             .then((resMsg) => {
                 setTimeout(() => {
                     setModalMessage(resMsg);
+                    if (resMsg === '정상적으로 인증 되었습니다.'){
+                        setEmail("");
+                        setAuthCode("");
+                        setModalContent("입력하신 이메일과 인증코드로 로그인 하실수 있습니다.");
+                    }
                     setIsModalOpen(true);
                     setLoading(false);
                 }, 200);
                 // 추후 성공시만 초기화 되게 설정
-                // setEmail("");
-                // setAuthCode("");
             })
             .catch(() => {
                 setModalMessage("오류로 인해 처리가 되지않았습니다.\n다시 시도해주시길 바랍니다.");
@@ -53,6 +59,7 @@ function AuthCheckComponent() {
             )}
 
             <div className="px-4 space-y-6">
+                <h1>00협회 등록 인증</h1>
                 {/* 이메일 입력 */}
                 <div className="flex flex-col mb-4">
                     <label className="text-gray-700 font-semibold">이메일 주소</label>
@@ -94,6 +101,7 @@ function AuthCheckComponent() {
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30">
                     <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
                         <p className="text-lg mb-4">{modalMessage}</p>
+                        {modalContent && <p className="text-lg mb-4">{modalContent}</p>}
                         <button
                             onClick={closeModal}
                             className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"

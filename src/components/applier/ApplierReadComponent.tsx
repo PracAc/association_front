@@ -10,7 +10,7 @@ const InitialApplier: IApplierRead = {
     openDate: "",
     name: "",
     email: "",
-    applierStatus: "",
+    regStatus: "",
     attachFileNames: [],
     regDate: ""
 };
@@ -57,9 +57,7 @@ function ApplierReadComponent() {
         setLoading(true);
         getApplier(Number(ano)).then((data) => {
             setApplier(data);
-            setTimeout(() => {
-                setLoading(false);
-            }, 400);
+            setLoading(false);
         });
     }, [ano]);
 
@@ -167,99 +165,101 @@ function ApplierReadComponent() {
 
 
     return (
-        <div className="pt-5 pb-5 w-full mx-auto">
-            {loading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
-                    <LoadingComponent />
-                </div>
-            )}
-            <div className={`px-4 space-y-6 ${loading ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
-                {/* 등록 정보 */}
-                <div className="flex gap-6">
-                    {/* 등록번호 */}
-                    <div className="bg-white p-4 border border-black w-1/3">
-                        <span className="text-gray-700 font-semibold">등록번호</span>
-                        <p className="text-gray-600">{applier.ano}</p>
+        <>
+            {loading && <LoadingComponent/>}
+            <div className={`pt-5 pb-5 w-full mx-auto ${loading ? "hidden" : ""}`}>
+                <div className="px-4 space-y-6">
+                    {/* 등록 정보 */}
+                    <div className="flex gap-6">
+                        {/* 등록번호 */}
+                        <div className="bg-white p-4 border border-black w-1/3">
+                            <span className="text-gray-700 font-semibold">등록번호</span>
+                            <p className="text-gray-600">{applier.ano}</p>
+                        </div>
+
+                        {/* 등록일 */}
+                        <div className="bg-white p-4 border border-black w-1/3">
+                            <span className="text-gray-700 font-semibold">등록일</span>
+                            <p className="text-gray-600">{applier.regDate}</p>
+                        </div>
                     </div>
 
-                    {/* 등록일 */}
-                    <div className="bg-white p-4 border border-black w-1/3">
-                        <span className="text-gray-700 font-semibold">등록일</span>
-                        <p className="text-gray-600">{applier.regDate}</p>
+                    {/* 사업자 정보 */}
+                    <div className="flex flex-col gap-2 border border-gray-200 p-2">
+                        {/* 사업자 등록 번호 */}
+                        <div className="bg-white p-4 border border-black">
+                            <span className="text-gray-700 font-semibold">사업자 등록 번호</span>
+                            <p className="text-gray-600">{applier.bizNo}</p>
+                        </div>
+
+                        {/* 이름 */}
+                        <div className="bg-white p-4 border border-black">
+                            <span className="text-gray-700 font-semibold">성명(대표자)</span>
+                            <p className="text-gray-600">{applier.name}</p>
+                        </div>
+
+                        {/* 등록일 */}
+                        <div className="bg-white p-4 border border-black">
+                            <span className="text-gray-700 font-semibold">개업일</span>
+                            <p className="text-gray-600">{applier.openDate}</p>
+                        </div>
+
+                        {/* 이메일 */}
+                        <div className="bg-white p-4 border border-black">
+                            <span className="text-gray-700 font-semibold">대표 이메일</span>
+                            <p className="text-gray-600">{applier.email}</p>
+                        </div>
                     </div>
-                </div>
 
-                {/* 사업자 정보 */}
-                <div className="flex flex-col gap-2 border border-gray-200 p-2">
-                    {/* 사업자 등록 번호 */}
-                    <div className="bg-white p-4 border border-black">
-                        <span className="text-gray-700 font-semibold">사업자 등록 번호</span>
-                        <p className="text-gray-600">{applier.bizNo}</p>
-                    </div>
+                    {/* 이미지 목록 */}
+                    {imgDivs && <div className="flex flex-wrap -m-2">{imgDivs}</div>}
 
-                    {/* 이름 */}
-                    <div className="bg-white p-4 border border-black">
-                        <span className="text-gray-700 font-semibold">성명(대표자)</span>
-                        <p className="text-gray-600">{applier.name}</p>
-                    </div>
-
-                    {/* 등록일 */}
-                    <div className="bg-white p-4 border border-black">
-                        <span className="text-gray-700 font-semibold">개업일</span>
-                        <p className="text-gray-600">{applier.openDate}</p>
-                    </div>
-
-                    {/* 이메일 */}
-                    <div className="bg-white p-4 border border-black">
-                        <span className="text-gray-700 font-semibold">대표 이메일</span>
-                        <p className="text-gray-600">{applier.email}</p>
-                    </div>
-                </div>
-
-                {/* 이미지 목록 */}
-                {imgDivs && <div className="flex flex-wrap -m-2">{imgDivs}</div>}
-
-                {/* 버튼들 */}
-                <div className="flex gap-4 mt-6 justify-between">
-                    <button
-                        onClick={handleMoveToList}
-                        className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 transition duration-200"
-                    >
-                        목록
-                    </button>
-                    <div className="flex gap-3">
+                    {/* 버튼들 */}
+                    <div className="flex gap-4 mt-6 justify-between">
                         <button
-                            onClick={()=>handleClickStatus(1)}
-                            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50 transition duration-200"
+                            onClick={handleMoveToList}
+                            className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 transition duration-200"
                         >
-                            승인
+                            목록
                         </button>
+                        <div className="flex gap-3">
+                            {/*{applier.regStatus === "PENDING" && (*/}
+                                <>
+                                    <button
+                                        onClick={() => handleClickStatus(1)}
+                                        className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50 transition duration-200"
+                                    >
+                                        승인
+                                    </button>
 
-                        <button
-                            onClick={()=>handleClickStatus(2)}
-                            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-opacity-50 transition duration-200"
-                        >
-                            반려
-                        </button>
+                                    <button
+                                        onClick={() => handleClickStatus(2)}
+                                        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-opacity-50 transition duration-200"
+                                    >
+                                        반려
+                                    </button>
+                                </>
+                            {/*)}*/}
+                        </div>
                     </div>
                 </div>
+
+                {/* 알림 모달 */}
+                {modalOpen && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30">
+                        <div className="flex flex-col justify-center bg-white p-8 rounded-lg shadow-lg">
+                            <p className="text-xl">{modalMessage}</p>
+                            <button
+                                onClick={closeModal}
+                                className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 transition duration-200"
+                            >
+                                확인
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
-
-            {/* 알림 모달 */}
-            {modalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30">
-                    <div className="flex flex-col justify-center bg-white p-8 rounded-lg shadow-lg">
-                        <p className="text-xl">{modalMessage}</p>
-                        <button
-                            onClick={closeModal}
-                            className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 transition duration-200"
-                        >
-                            확인
-                        </button>
-                    </div>
-                </div>
-            )}
-        </div>
+        </>
     );
 }
 

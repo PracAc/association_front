@@ -5,6 +5,8 @@ import {IApplierList} from "../../types/applier/applier.ts";
 import LoadingComponent from "../common/LoadingComponent.tsx";
 import {getApplierList} from "../../apis/applierAPI.ts";
 import PageComponent from "../common/PageComponent.tsx";
+import {Cookies} from "react-cookie";
+const cookies = new Cookies();
 
 const initialState: IPageResponse<IApplierList> = {
     dtoList: [],
@@ -83,12 +85,11 @@ function ApplierListComponent() {
     };
 
     useEffect(() => {
-
-
-        // // 로그인 쿠키가 없다면 로그인 페이지로 리디렉션
-        // if (!adminLoginCookie) {
-        //     navigate("/login");
-        // }
+        const adminLoginCookie = cookies.get("adminlogin");
+        // 로그인 쿠키가 없다면 로그인 페이지로 리디렉션
+        if (!adminLoginCookie) {
+            navigate("/login");
+        }
 
         setLoading(true);
         getApplierList(page, size, filters).then((data) => {
@@ -138,8 +139,8 @@ function ApplierListComponent() {
 
     return (
         <>
-            <div className="w-full py-8">
-                {loading && <LoadingComponent/>}
+            {loading && <LoadingComponent/>}
+            <div className={`w-full py-8 ${loading ? "hidden" : ""}`}>
 
                 {/* 검색창 섹션 */}
                 <div className="grid grid-cols-6 gap-4 mb-6">
