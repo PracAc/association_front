@@ -6,7 +6,7 @@ import {getApplier, modifyApplierStatus} from "../../apis/applierAPI.ts";
 
 const InitialApplier: IApplierRead = {
     ano: 0,
-    bizNo:0,
+    bizNo: "",
     openDate: "",
     name: "",
     email: "",
@@ -170,10 +170,13 @@ function ApplierReadComponent() {
         <div className="pt-5 pb-5 w-full mx-auto">
             {loading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
-                    <LoadingComponent />
+                    <LoadingComponent/>
                 </div>
             )}
-            <div className={`px-4 space-y-6 ${loading ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
+            <div className="mx-auto size-11/12 mt-5 text-2xl">
+                신청관리 목록
+            </div>
+            <div className={`mt-10 px-4 space-y-6 ${loading ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
                 {/* 등록 정보 */}
                 <div className="flex gap-6">
                     {/* 등록번호 */}
@@ -229,14 +232,14 @@ function ApplierReadComponent() {
                     </button>
                     <div className="flex gap-3">
                         <button
-                            onClick={()=>handleClickStatus(1)}
+                            onClick={() => handleClickStatus(1)}
                             className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50 transition duration-200"
                         >
                             승인
                         </button>
 
                         <button
-                            onClick={()=>handleClickStatus(2)}
+                            onClick={() => handleClickStatus(2)}
                             className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-opacity-50 transition duration-200"
                         >
                             반려
