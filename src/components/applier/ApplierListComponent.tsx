@@ -39,11 +39,11 @@ function ApplierListComponent() {
         regStatus: query.get("regStatus") || ""
     });
 
-    const queryStr = createSearchParams({
-        page: String(page),
-        size: String(size),
-        ...filters
-    });
+    // const queryStr = createSearchParams({
+    //     page: String(page),
+    //     size: String(size),
+    //     ...filters
+    // });
 
     // 검색 핸들러
     const handleSearch = () => {
@@ -51,10 +51,7 @@ function ApplierListComponent() {
         getApplierList(1, size, filters).then((data) => {
             setPageResponse(data);
             setLoading(false);
-        }).catch((error) => {
-            console.error("검색 오류:", error);
-            setLoading(false);
-        });
+        })
     };
 
     const handleFilterInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -62,6 +59,24 @@ function ApplierListComponent() {
     };
 
     const moveToRead = (ano:number) => {
+        const filteredFilters = Object.fromEntries(
+            Object.entries(filters)
+                .filter(([key, value]) => {
+                    const isValid = value.trim() !== "";
+                    if (isValid) {
+                        console.log(`Key: ${key}, Value: ${value}`);
+                    }
+                    return isValid;
+                })
+        );
+
+        // 쿼리 문자열 생성
+        const queryStr = createSearchParams({
+            page: String(page),
+            size: String(size),
+            ...filteredFilters
+        });
+
         navigate({
             pathname: `/applier/read/${ano}`,
             search:`${queryStr}`
@@ -175,9 +190,9 @@ function ApplierListComponent() {
                         onChange={handleFilterInputChange}
                         className="border p-2 text-sm">
                         <option value="">상태 선택</option>
-                        <option value="0">PENDING</option>
-                        <option value="1">ACCEPTED</option>
-                        <option value="2">REJECTED</option>
+                        <option value="PENDING">PENDING</option>
+                        <option value="ACCEPTED">ACCEPTED</option>
+                        <option value="REJECTED">REJECTED</option>
                     </select>
                     <button
                         onClick={handleSearch}
