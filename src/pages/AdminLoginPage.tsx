@@ -2,6 +2,8 @@ import SigninComponent from "../components/adminlogin/SigninComponent.tsx";
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {useAppSelector} from "../hooks/rtk.ts";
+import BasicLayout from "../layouts/MainLayout.tsx";
+
 
 function AdminLoginPage() {
     const loginInfo = useAppSelector((state) => state.signin); // 리덕스에서 adminlogin 상태 가져오기
@@ -18,9 +20,12 @@ function AdminLoginPage() {
     }
 
     return (
-        <div className="justify-center h-full">
+
+    <BasicLayout>
+        <div className="flex justify-center items-center min-h-screen bg-gray-100">
             <SigninComponent />
         </div>
+    </BasicLayout>
     );
 }
 

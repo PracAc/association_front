@@ -130,6 +130,9 @@ function ApplierListComponent() {
 
     return (
         <>
+            <div className="mx-auto size-11/12 mt-5 text-2xl">
+                신청관리 목록
+            </div>
             <div className="w-full py-8">
                 {loading && <LoadingComponent/>}
 

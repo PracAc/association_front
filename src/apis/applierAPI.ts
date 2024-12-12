@@ -60,3 +60,16 @@ export const checkApplierAuth = async (ano: number, email: string, authCode:stri
 
     return res.data
 }
+
+export const sendEmailAuth = async  (email: string) => {
+
+    const res = await axios.post(`${host}/auth/email`, {email})
+
+    return res.data
+}
+
+export const checkEmailAuth = async (email: string, authCode: string) => {
+    const res = await axios.post(`${host}/auth/emailchk`, {email, authCode})
+
+    return res.data
+}

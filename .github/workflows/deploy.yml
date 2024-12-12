@@ -1,0 +1,39 @@
+name: React App CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out the code from GitHub
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 2. Set up Node.js and install dependencies
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16' # 사용할 Node.js 버전
+
+      - name: Install dependencies
+        run: npm install
+
+      # 3. Set up environment variables from GitHub Secrets and create .env file
+      - name: Create .env file for React app
+        run: echo "VITE_BIZ_SERVICE_KEY=${{ secrets.VITE_BIZ_SERVICE_KEY }}" > .env
+
+      # 3. Run tests
+      - name: Run tests
+        run: npm test -- --ci --silent
+
+      # 4. Build the app for production
+      - name: Build the app
+        run: npm run build

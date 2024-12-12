@@ -1,12 +1,13 @@
 
 import {IAdminlogin, ISigninParam} from "../types/iadminlogin.ts";
+import axios from "axios";
 import jwtAxios from "../util/jwtUtil.ts";
 
 const host = 'http://localhost:8080/api/association/login'
 
 export const postSignin = async (param: ISigninParam): Promise<IAdminlogin> => {
     try {
-        const result = await jwtAxios.post(
+        const result = await axios.post(
             `${host}/makeToken`,
             JSON.stringify(param), // 요청 본문을 명시적으로 JSON 문자열로 보내기
             {
@@ -17,7 +18,7 @@ export const postSignin = async (param: ISigninParam): Promise<IAdminlogin> => {
         );
         return result.data;
     } catch (exception: any) {
-        //console.error(exception.response.data.message); // 에러 로그 추가
+        console.error(exception.response.data.message); // 에러 로그 추가
         window.location.href = "/login?error=incorrect"
         throw exception;
     }
