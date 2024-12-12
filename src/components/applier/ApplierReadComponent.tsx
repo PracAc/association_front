@@ -10,6 +10,7 @@ const InitialApplier: IApplierRead = {
     openDate: "",
     name: "",
     email: "",
+    snsAddr: "",
     regStatus: "",
     attachFileNames: [],
     regDate: "",
@@ -195,6 +196,10 @@ const ApplierReadComponent = () => {
                                 <span className="text-gray-600">{applier.name}</span>
                             </div>
                             <div className="flex items-center gap-3">
+                                <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">SNS 주소</span>
+                                <span className="text-gray-600">{applier.snsAddr}</span>
+                            </div>
+                            <div className="flex items-center gap-3">
                                 <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">이메일</span>
                                 <span className="text-gray-600">{applier.email}</span>
                             </div>
@@ -215,6 +220,9 @@ const ApplierReadComponent = () => {
                         <span>등록된 파일이 없습니다.</span>}
                 </div>
 
+                {/* 승인 반려 처리 되었을 경우 */}
+                {applier.regStatus === "ACCEPTED" && <div>현재 승인 되었습니다.</div>}
+                {applier.regStatus === "REJECTED" && <div>현재 반려 되었습니다.</div>}
                 {/* 버튼들 */}
                 <div className="flex gap-4 mt-6 justify-between">
                     <button

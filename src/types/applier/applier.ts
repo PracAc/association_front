@@ -14,6 +14,7 @@ export interface IApplierRead {
     openDate: string;
     name: string;
     email: string;
+    snsAddr: string;
 
     regStatus: string;
 
