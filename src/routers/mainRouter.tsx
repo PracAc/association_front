@@ -9,7 +9,7 @@ const AuthCheckPage = lazy(() => import("../pages/AuthCheckPage.tsx"))
 const ApplierIndex = lazy(() => import("../pages/applier/ApplierIndex.tsx"))
 const ApplierListPage = lazy(() => import("../pages/applier/ApplierListPage.tsx"))
 const ApplierReadPage = lazy(() => import("../pages/applier/ApplierReadPage.tsx"))
-
+const ApplierMainPage = lazy(() => import("../pages/ApplierMainPage.tsx"))
 
 export const Loading = <LoadingPage></LoadingPage>
 
@@ -25,6 +25,10 @@ const mainRouter = createBrowserRouter([
     {
         path: "/auth/:ano",
         element: <Suspense fallback={Loading}><AuthCheckPage/></Suspense>
+    },
+    {
+        path:"/main",
+        element: <Suspense fallback={Loading}><ApplierMainPage/></Suspense>
     },
     {
         path: "/register",
