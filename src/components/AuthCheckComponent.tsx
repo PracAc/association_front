@@ -44,11 +44,11 @@ function AuthCheckComponent() {
     };
 
     return (
-        <div className="flex w-full min-h-screen bg-gray-100">
+        <div className="flex w-full  min-h-screen bg-gray-100">
 
 
             {/* 중간 영역 */}
-            <div className="w-1/2 bg-white pt-5 pb-5 mx-auto max-w-md shadow-md">
+            <div className="w-1/2 max-w-full bg-white pt-5 pb-5 mx-auto  shadow-md">
                 {/* 로딩 상태 */}
                 {loading && (
                     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
@@ -56,7 +56,7 @@ function AuthCheckComponent() {
                     </div>
                 )}
 
-                <div className="px-4 space-y-6">
+                <div className="px-36 space-y-2">
                     {/* 이메일 입력 */}
                     <div className="flex flex-col mb-4 mt-40">
                         <label className="text-gray-700 font-semibold">이메일 주소</label>

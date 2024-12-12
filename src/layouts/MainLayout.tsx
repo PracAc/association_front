@@ -3,7 +3,7 @@ import React from 'react';
 import NaviBar from "../components/common/NaviBar.tsx";
 
 
-function BasicLayout({children}: { children: React.ReactNode }) {
+function MainLayout({children}: { children: React.ReactNode }) {
 
     // const {doSignout} = useSignin();
     // const navigate = useNavigate();
@@ -27,4 +27,4 @@ function BasicLayout({children}: { children: React.ReactNode }) {
     );
 }
 
-export default BasicLayout;
+export default MainLayout;

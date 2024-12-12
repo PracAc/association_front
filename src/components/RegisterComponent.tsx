@@ -1,7 +1,6 @@
 import {useRef, useState} from 'react';
 import {bizValidateChk} from "../apis/bizAPI.ts";
 import {IBizChk, INoBizChk} from "../types/applier/biz.ts";
-import {registryApplier} from "../apis/applierAPI.ts";
 import LoadingComponent from "./common/LoadingComponent.tsx";
 
 const InitialChk: IBizChk = {
