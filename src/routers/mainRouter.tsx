@@ -1,6 +1,5 @@
 import {createBrowserRouter, Navigate} from "react-router-dom";
 import {lazy, Suspense} from "react";
-import noticeRouter from "./noticeRouter.tsx";
 
 
 const LoadingPage = lazy(() => import("../pages/LoadingPage.tsx"))
@@ -10,6 +9,7 @@ const AuthCheckPage = lazy(() => import("../pages/AuthCheckPage.tsx"))
 const ApplierIndex = lazy(() => import("../pages/applier/ApplierIndex.tsx"))
 const ApplierListPage = lazy(() => import("../pages/applier/ApplierListPage.tsx"))
 const ApplierReadPage = lazy(() => import("../pages/applier/ApplierReadPage.tsx"))
+const AdminMainPage = lazy(() => import("../pages/admin/AdminMainPage.tsx"))
 
 
 export const Loading = <LoadingPage></LoadingPage>
@@ -32,6 +32,20 @@ const mainRouter = createBrowserRouter([
         element: <Suspense fallback={Loading}><RegisterPage/></Suspense>
     },
     {
+        path: "/admin",
+        element: <Suspense fallback={Loading}><ApplierIndex/></Suspense>,
+        children:[
+            {
+                path: "",
+                element: <Navigate to="main" replace={true}></Navigate>
+            },
+            {
+                path:"main",
+                element: <Suspense fallback={Loading}><AdminMainPage/></Suspense>
+            }
+        ]
+    },
+    {
         path: "/applier",
         element: <Suspense fallback={Loading}><ApplierIndex/></Suspense>,
         children:[
@@ -48,8 +62,7 @@ const mainRouter = createBrowserRouter([
                 element: <Suspense fallback={Loading}><ApplierReadPage/></Suspense>
             }
         ]
-    },
-    noticeRouter
+    }
 
 ])
 

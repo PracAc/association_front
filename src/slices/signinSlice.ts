@@ -23,6 +23,7 @@ const signinSlice = createSlice({
         signin: (state, action) => {
             console.log("Signin action", state, action);
             const { adminId, pw, accessToken, refreshToken, adminName } = action.payload;
+            console.log(adminName)
 
             // 상태 갱신
             state.adminId = adminId || state.adminId;
@@ -42,6 +43,7 @@ const signinSlice = createSlice({
             .addCase(postSigninThunk.fulfilled, (state, action) => {
                 const result = action.payload; // API 응답 데이터
                 console.log("extraReducer) API just called successfully...");
+                console.log(result)
                 if (result) {
                     state.adminId = result.adminId;
                     state.pw = result.pw;
