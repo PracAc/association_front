@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import Depth1Menu from "./Depth1Menu.tsx";
+import {useAppSelector} from "../../hooks/rtk.ts";
 
 function AsideMenuComponent() {
     const menus = [
@@ -8,26 +8,20 @@ function AsideMenuComponent() {
             subMenus: [{ name: "신청목록", toPath: "/list" }],
             basicPath: "/applier",
             iconName: "users.png",
-        },
-        {
-            mainName: "공지 관리",
-            subMenus: [
-                { name: "공지 목록", toPath: "/list" },
-            ],
-            basicPath: "/notice",
-            iconName: "category.png",
-        },
+        }
     ];
+
+    const adminName = useAppSelector((state) => state.signin.adminName);
+    console.log(adminName)
 
     return (
         <aside className="z-20 hidden w-64 bg-gray-100 md:block flex-shrink-0 border-r border-gray-200 shadow-sm">
-            <div className="py-6 text-center">
-                <Link
-                    to="/applier/list"
-                    className="block text-lg font-bold text-blue-800 hover:text-blue-600"
-                >
-                    협회 관리자
-                </Link>
+            <div className="flex flex-col gap-4 py-6 text-center">
+                <span className="block text-lg font-bold text-blue-600">부산 지역 아티스트 협회</span>
+                <div className="flex flex-col items-center gap-2">
+                    <img className="rounded-full w-24 h-24" src="/src/assets/img/defaultUser.jpg" alt="기본 유저이미지"/>
+                    <span>관리자 <span className="font-semibold">{adminName}</span> 님</span>
+                </div>
             </div>
             <ul className="px-4 space-y-2">
                 {menus.map((menu, index) => (
