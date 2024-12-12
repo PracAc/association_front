@@ -23,7 +23,7 @@ function RegisterComponent() {
     // 사업자 등록증 진위여부 타입 상태
     const [bizChk, setBizChk] = useState<IBizChk>(initialBizChk);
 
-    // 사업자 등록증 진위여부 타입 상태
+    // 일반 제작자 타입 상태
     const [noBizChk, setNoBizChk] = useState<INoBizChk>(initialNoBizChk);
 
     // 사업자 등록증 인증 여부 상태
@@ -151,6 +151,11 @@ function RegisterComponent() {
         if (!hasBizNo) {
             if (!noBizChk.name) {
                 setModalMessage("이름을 입력 해주세요.")
+                setModalOpen(true);
+                return;
+            }
+            if (!noBizChk.s_link) {
+                setModalMessage("SNS 주소를 입력 해주세요.")
                 setModalOpen(true);
                 return;
             }
