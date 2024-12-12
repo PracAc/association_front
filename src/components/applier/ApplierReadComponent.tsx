@@ -21,17 +21,25 @@ const ApplierReadComponent = () => {
     const navigate = useNavigate();
     const queryStr = new URLSearchParams(query).toString();
 
+    // 로딩 상태
     const [loading, setLoading] = useState<boolean>(false);
+    // 알림 모달 상태
     const [modalOpen, setModalOpen] = useState(false);
+    // 알림 모달 메세지 상태
     const [modalMessage, setModalMessage] = useState<string>("");
+    // 제작자 정보 상태
     const [applier, setApplier] = useState<IApplierRead>(InitialApplier);
+    // 반려 모달 상태
     const [rejectModal, setRejectModal] = useState(false);
+    // 반려 사유 상태
     const [rejectReason, setRejectReason] = useState<string>("");
 
+    // 목록 이동 버튼 함수
     const handleMoveToList = () => {
         navigate(`/applier/list?${queryStr}`);
     };
 
+    // 승인, 반려 버튼 함수
     const handleClickStatus = (status: number) => {
         setLoading(true);
         if (status === 2) {
@@ -51,6 +59,7 @@ const ApplierReadComponent = () => {
             });
     };
 
+    // 알림 모달 닫기 버튼
     const closeModal = () => {
         setModalOpen(false);
         handleMoveToList();
@@ -137,51 +146,73 @@ const ApplierReadComponent = () => {
 
             <div className={`mt-6 px-6 space-y-6 ${loading ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
                 {/* 등록 정보 섹션 */}
-                <div className="mb-8">
-                    <div className="text-2xl font-semibold text-gray-700 mb-4">등록 내용</div>
-                    <div className="grid grid-cols-2 gap-6">
-                        <div className="flex items-center">
-                            <span className="w-40 text-gray-600 font-semibold">등록번호</span>
+                <div className="mb-8  py-4">
+                    <div className="text-2xl mb-4 py-4 border-b-2 border-gray-700 font-semibold text-gray-700">등록 내용</div>
+                    <div className="grid grid-cols-2 gap-6 py-4">
+                        <div className="flex items-center  gap-3">
+                            <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">등록번호</span>
                             <span className="text-gray-600">{applier.ano}</span>
                         </div>
-                        <div className="flex items-center">
-                            <span className="w-40 text-gray-600 font-semibold">등록일</span>
+                        <div className="flex items-center gap-3">
+                            <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">등록일</span>
                             <span className="text-gray-600">{applier.regDate}</span>
                         </div>
                     </div>
                 </div>
 
                 {/* 사업자 정보 섹션 */}
-                <div className="mb-8">
-                    <div className="text-2xl font-semibold text-gray-700 mb-4">사업자 정보</div>
-                    <div className="grid grid-cols-2 gap-6">
-                        <div className="flex items-center">
-                            <span className="w-40 text-gray-600 font-semibold">사업자 등록 번호</span>
-                            <span className="text-gray-600">{applier.bizNo}</span>
-                        </div>
-                        <div className="flex items-center">
-                            <span className="w-40 text-gray-600 font-semibold">성명(대표자)</span>
-                            <span className="text-gray-600">{applier.name}</span>
-                        </div>
-                        <div className="flex items-center">
-                            <span className="w-40 text-gray-600 font-semibold">개업일</span>
-                            <span className="text-gray-600">{applier.openDate}</span>
-                        </div>
-                        <div className="flex items-center">
-                            <span className="w-40 text-gray-600 font-semibold">대표 이메일</span>
-                            <span className="text-gray-600">{applier.email}</span>
+                {applier.bizNo &&
+                    <div className="mb-8">
+                        <div className="text-2xl mb-4 py-4 border-b-2 border-gray-700 font-semibold text-gray-700">사업자 정보</div>
+                        <div className="grid grid-cols-2 gap-6 py-4">
+                            <div className="flex items-center gap-3">
+                                <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">사업자 등록 번호</span>
+                                <span className="text-gray-600">{applier.bizNo}</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">성명(대표자)</span>
+                                <span className="text-gray-600">{applier.name}</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">개업일</span>
+                                <span className="text-gray-600">{applier.openDate}</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">대표 이메일</span>
+                                <span className="text-gray-600">{applier.email}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
+
+                {/* 사업자 정보가 없을시 정보 섹션 */}
+                { ! applier.bizNo &&
+                    <div className="mb-8">
+                        <div className="text-2xl mb-4 py-4 border-b-2 border-gray-700 font-semibold text-gray-700">제작자 정보</div>
+                        <div className="grid grid-cols-2 gap-6 py-4">
+                            <div className="flex items-center gap-3">
+                                <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">성명</span>
+                                <span className="text-gray-600">{applier.name}</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">이메일</span>
+                                <span className="text-gray-600">{applier.email}</span>
+                            </div>
+                        </div>
+                    </div>
+                }
 
                 {/* 파일 목록 섹션 */}
-                <div className="mb-8">
-                    <div className="text-2xl font-semibold text-gray-700 mb-4">파일 목록</div>
+                <div className="mb-8 min-h-[20rem]">
+                    <div className="text-2xl mb-4 py-4 border-b-2 border-gray-700 font-semibold text-gray-700">파일 목록</div>
                     {/* 이미지 파일 */}
                     {fileList.imageFiles}
 
                     {/* 이미지가 아닌 파일 */}
                     {fileList.nonImageFiles}
+                    {/* 등록된 파일이 없을경우 */}
+                    {!fileList || (fileList.imageFiles.length === 0 && fileList.nonImageFiles.length === 0) &&
+                        <span>등록된 파일이 없습니다.</span>}
                 </div>
 
                 {/* 버튼들 */}

@@ -189,7 +189,7 @@ function ApplierListComponent() {
                         value={filters.regStatus}
                         onChange={handleFilterInputChange}
                         className="border p-2 text-sm">
-                        <option value="">상태 선택</option>
+                        <option value="">전체 상태</option>
                         <option value="PENDING">PENDING</option>
                         <option value="ACCEPTED">ACCEPTED</option>
                         <option value="REJECTED">REJECTED</option>
