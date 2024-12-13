@@ -1,7 +1,7 @@
 import axios from "axios";
 import jwtAxios from "../util/jwtUtil.ts";
 
-const host = "http://localhost:8080/api/association/applier"
+const host = "http://3.36.52.117:8080/api/association/applier"
 
 export const getApplierList = async (page?: number, size?: number, filters?: {
     bizNo: string;
