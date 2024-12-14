@@ -2,7 +2,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LoadingComponent from "../common/LoadingComponent.tsx";
 import { IApplierRead } from "../../types/applier/applier.ts";
-import {getApplier, modifyApplierStatus} from "../../apis/applierAPI.ts";
+import { getApplier, modifyApplierStatus } from "../../apis/applierAPI.ts";
 
 const InitialApplier: IApplierRead = {
     ano: 0,
@@ -10,44 +10,57 @@ const InitialApplier: IApplierRead = {
     openDate: "",
     name: "",
     email: "",
-    applierStatus: "",
+    snsAddr: "",
+    regStatus: "",
     attachFileNames: [],
-    regDate: ""
+    regDate: "",
 };
 
-function ApplierReadComponent() {
+const ApplierReadComponent = () => {
     const { ano } = useParams();
     const [query] = useSearchParams();
     const navigate = useNavigate();
     const queryStr = new URLSearchParams(query).toString();
 
+    // 로딩 상태
     const [loading, setLoading] = useState<boolean>(false);
+    // 알림 모달 상태
     const [modalOpen, setModalOpen] = useState(false);
-    const [modalMessage, setModalMessage] = useState("");
+    // 알림 모달 메세지 상태
+    const [modalMessage, setModalMessage] = useState<string>("");
+    // 제작자 정보 상태
     const [applier, setApplier] = useState<IApplierRead>(InitialApplier);
+    // 반려 모달 상태
+    const [rejectModal, setRejectModal] = useState(false);
+    // 반려 사유 상태
+    const [rejectReason, setRejectReason] = useState<string>("");
 
-    // 리스트 목록 이동
+    // 목록 이동 버튼 함수
     const handleMoveToList = () => {
         navigate(`/applier/list?${queryStr}`);
     };
 
-    // 승인 또는 반려 버튼 클릭 시 상태 변경
+    // 승인, 반려 버튼 함수
     const handleClickStatus = (status: number) => {
-        // status 1 = 승인, 2 = 반려
-        setLoading(true)
+        setLoading(true);
+        if (status === 2) {
+            setRejectModal(false);
+            setRejectReason("");
+        }
 
-        modifyApplierStatus(Number(ano), status)
+        modifyApplierStatus(Number(ano), status, status === 2 ? rejectReason : undefined)
             .then(() => {
                 setLoading(false);
-                setModalMessage(`${status === 1 ? "승인" : "반려"} 처리 되었습니다.`);
+                setModalMessage(`${status === 1 ? "승인" : "반려"} 처리가 완료 되었습니다.`);
                 setModalOpen(true);
-        }).catch(() => {
-            setModalMessage(`${status === 1 ? "승인" : "반려"} 가 실패 되었습니다. \n 확인후 다시 해주시길 바랍니다.`);
-            setModalOpen(true);
-        });
+            })
+            .catch(() => {
+                setModalMessage(`${status === 1 ? "승인" : "반려"} 가 실패 되었습니다. \n 확인후 다시 해주시길 바랍니다.`);
+                setModalOpen(true);
+            });
     };
 
-    // 알림 모달 닫기
+    // 알림 모달 닫기 버튼
     const closeModal = () => {
         setModalOpen(false);
         handleMoveToList();
@@ -57,213 +70,232 @@ function ApplierReadComponent() {
         setLoading(true);
         getApplier(Number(ano)).then((data) => {
             setApplier(data);
-            setTimeout(() => {
-                setLoading(false);
-            }, 400);
+            setTimeout(() => setLoading(false), 400);
         });
     }, [ano]);
 
-    // 이미지 div 목록
-    const imgDivs = (
-        <div className="w-full p-4">
-            {/* 이미지가 아닌 파일 리스트 */}
-            <div className="mb-8">
-                {applier.attachFileNames &&
-                    applier.attachFileNames
-                        .filter((fileName) => !fileName.match(/\.(jpg|jpeg|png|gif)$/i))
-                        .map((fileName, index) => {
-                            const actualFileName = fileName.split('_').pop() ?? '';
-                            const linkFileName = fileName.split('/').pop() ?? '';
-                            const originalFilePath = `https://s3.ap-northeast-2.amazonaws.com/oz-wizard-bucket/creator/portfolio/${linkFileName}`;
-                            const isPdf = linkFileName.match(/\.pdf$/i);
-                            const isPpt = linkFileName.match(/\.(ppt|pptx)$/i);
+    const fileList = {
+        nonImageFiles: applier.attachFileNames?.filter((fileName) => !fileName.match(/\.(jpg|jpeg|png|gif)$/i))
+            .map((fileName, index) => {
+                const actualFileName = fileName.split('_').pop() ?? '';
+                const linkFileName = fileName.split('/').pop() ?? '';
+                const originalFilePath = `https://s3.ap-northeast-2.amazonaws.com/oz-wizard-bucket/creator/portfolio/${linkFileName}`;
+                const isPdf = linkFileName.match(/\.pdf$/i);
+                const isPpt = linkFileName.match(/\.(ppt|pptx)$/i);
 
-                            return (
-                                <p key={index} className="mb-4">
-                                    {isPdf ? (
-                                        <>
-                                            <a
-                                                href={originalFilePath}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-600 font-semibold hover:text-blue-800 hover:underline"
-                                            >
-                                                {actualFileName} (미리보기)
-                                            </a>
-                                            <br/>
-                                            <a
-                                                href={originalFilePath}
-                                                download
-                                                className="text-sm text-gray-500 hover:text-gray-700"
-                                            >
-                                                다운로드
-                                            </a>
-                                        </>
-                                    ) : isPpt ? (
-                                        <>
-                                            <a
-                                                href={`https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
-                                                    originalFilePath
-                                                )}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-600 font-semibold hover:text-blue-800 hover:underline"
-                                            >
-                                                {actualFileName} (미리보기)
-                                            </a>
-                                            <br/>
-                                            <a
-                                                href={originalFilePath}
-                                                download
-                                                className="text-sm text-gray-500 hover:text-gray-700"
-                                            >
-                                                다운로드
-                                            </a>
-                                        </>
-                                    ) : (
-                                        <a
-                                            href={originalFilePath}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-600 font-semibold hover:text-blue-800 hover:underline"
-                                        >
-                                            {actualFileName}
-                                        </a>
-                                    )}
-                                </p>
-                            );
-                        })}
-            </div>
-
-            {/* 이미지 파일 리스트 */}
-            <div className="grid grid-cols-3 gap-4">
-                {applier.attachFileNames &&
-                    applier.attachFileNames
-                        .filter((fileName) => fileName.match(/\.(jpg|jpeg|png|gif)$/i))
-                        .map((fileName, index) => {
-                            const actualFileName = fileName.split('_').pop() ?? '';
-                            const linkFileName = fileName.split('/').pop() ?? '';
-                            const originalFilePath = `https://s3.ap-northeast-2.amazonaws.com/oz-wizard-bucket/creator/portfolio/${linkFileName}`;
-
-                            return (
+                return (
+                    <div key={index} className="flex justify-between items-center py-4 border-b">
+                        <div className="text-gray-600">{actualFileName}</div>
+                        <div className="flex space-x-4">
+                            {isPdf || isPpt ? (
                                 <a
-                                    key={index}
                                     href={originalFilePath}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="block border border-black overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+                                    className="text-blue-600 hover:text-blue-800"
                                 >
-                                    <img
-                                        src={originalFilePath}
-                                        alt={actualFileName}
-                                        className="w-full h-full object-center hover:scale-105 transition-transform duration-300"
-                                    />
+                                    미리보기
                                 </a>
-                            );
-                        })}
-            </div>
-        </div>
-    )
+                            ) : (
+                                <span className="text-gray-500">다운로드 불가</span>
+                            )}
+                        </div>
+                    </div>
+                );
+            }),
 
+        imageFiles: applier.attachFileNames?.filter((fileName) => fileName.match(/\.(jpg|jpeg|png|gif)$/i))
+            .map((fileName, index) => {
+                const actualFileName = fileName.split('_').pop() ?? '';
+                const linkFileName = fileName.split('/').pop() ?? '';
+                const originalFilePath = `https://s3.ap-northeast-2.amazonaws.com/oz-wizard-bucket/creator/portfolio/${linkFileName}`;
+
+                return (
+                    <div key={index} className="flex justify-between items-center py-4 border-b">
+                        <div className="text-gray-600">{actualFileName}</div>
+                        <div className="flex space-x-4">
+                            <a
+                                href={originalFilePath}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:text-blue-800"
+                            >
+                                미리보기
+                            </a>
+                            <a
+                                href={originalFilePath}
+                                download
+                                className="text-green-600 hover:text-green-800"
+                            >
+                                다운로드
+                            </a>
+                        </div>
+                    </div>
+                );
+            }),
+    };
 
     return (
         <div className="pt-5 pb-5 w-full mx-auto">
             {loading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
-                    <LoadingComponent/>
+                    <LoadingComponent />
                 </div>
             )}
-            <div className="mx-auto size-11/12 mt-5 text-2xl">
-                신청관리 목록
-            </div>
-            <div className={`mt-10 px-4 space-y-6 ${loading ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
-                {/* 등록 정보 */}
-                <div className="flex gap-6">
-                    {/* 등록번호 */}
-                    <div className="bg-white p-4 border border-black w-1/3">
-                        <span className="text-gray-700 font-semibold">등록번호</span>
-                        <p className="text-gray-600">{applier.ano}</p>
-                    </div>
 
-                    {/* 등록일 */}
-                    <div className="bg-white p-4 border border-black w-1/3">
-                        <span className="text-gray-700 font-semibold">등록일</span>
-                        <p className="text-gray-600">{applier.regDate}</p>
-                    </div>
-                </div>
+            <div className="text-3xl font-semibold text-center mb-8">신청관리 상세조회</div>
 
-                {/* 사업자 정보 */}
-                <div className="flex flex-col gap-2 border border-gray-200 p-2">
-                    {/* 사업자 등록 번호 */}
-                    <div className="bg-white p-4 border border-black">
-                        <span className="text-gray-700 font-semibold">사업자 등록 번호</span>
-                        <p className="text-gray-600">{applier.bizNo}</p>
-                    </div>
-
-                    {/* 이름 */}
-                    <div className="bg-white p-4 border border-black">
-                        <span className="text-gray-700 font-semibold">성명(대표자)</span>
-                        <p className="text-gray-600">{applier.name}</p>
-                    </div>
-
-                    {/* 등록일 */}
-                    <div className="bg-white p-4 border border-black">
-                        <span className="text-gray-700 font-semibold">개업일</span>
-                        <p className="text-gray-600">{applier.openDate}</p>
-                    </div>
-
-                    {/* 이메일 */}
-                    <div className="bg-white p-4 border border-black">
-                        <span className="text-gray-700 font-semibold">대표 이메일</span>
-                        <p className="text-gray-600">{applier.email}</p>
+            <div className={`mt-6 px-6 space-y-6 ${loading ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
+                {/* 등록 정보 섹션 */}
+                <div className="mb-8  py-4">
+                    <div className="text-2xl mb-4 py-4 border-b-2 border-gray-700 font-semibold text-gray-700">등록 내용</div>
+                    <div className="grid grid-cols-2 gap-6 py-4">
+                        <div className="flex items-center  gap-3">
+                            <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">등록번호</span>
+                            <span className="text-gray-600">{applier.ano}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">등록일</span>
+                            <span className="text-gray-600">{applier.regDate}</span>
+                        </div>
                     </div>
                 </div>
 
-                {/* 이미지 목록 */}
-                {imgDivs && <div className="flex flex-wrap -m-2">{imgDivs}</div>}
+                {/* 사업자 정보 섹션 */}
+                {applier.bizNo &&
+                    <div className="mb-8">
+                        <div className="text-2xl mb-4 py-4 border-b-2 border-gray-700 font-semibold text-gray-700">사업자 정보</div>
+                        <div className="grid grid-cols-2 gap-6 py-4">
+                            <div className="flex items-center gap-3">
+                                <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">사업자 등록 번호</span>
+                                <span className="text-gray-600">{applier.bizNo}</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">성명(대표자)</span>
+                                <span className="text-gray-600">{applier.name}</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">개업일</span>
+                                <span className="text-gray-600">{applier.openDate}</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">대표 이메일</span>
+                                <span className="text-gray-600">{applier.email}</span>
+                            </div>
+                        </div>
+                    </div>
+                }
 
+                {/* 사업자 정보가 없을시 정보 섹션 */}
+                { ! applier.bizNo &&
+                    <div className="mb-8">
+                        <div className="text-2xl mb-4 py-4 border-b-2 border-gray-700 font-semibold text-gray-700">제작자 정보</div>
+                        <div className="grid grid-cols-2 gap-6 py-4">
+                            <div className="flex items-center gap-3">
+                                <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">성명</span>
+                                <span className="text-gray-600">{applier.name}</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">SNS 주소</span>
+                                <span className="text-gray-600">{applier.snsAddr}</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="w-40 text-gray-600 border-r border-gray-600 font-semibold">이메일</span>
+                                <span className="text-gray-600">{applier.email}</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                {/* 파일 목록 섹션 */}
+                <div className="mb-8 min-h-[20rem]">
+                    <div className="text-2xl mb-4 py-4 border-b-2 border-gray-700 font-semibold text-gray-700">파일 목록</div>
+                    {/* 이미지 파일 */}
+                    {fileList.imageFiles}
+
+                    {/* 이미지가 아닌 파일 */}
+                    {fileList.nonImageFiles}
+                    {/* 등록된 파일이 없을경우 */}
+                    {!fileList || (fileList.imageFiles.length === 0 && fileList.nonImageFiles.length === 0) &&
+                        <span>등록된 파일이 없습니다.</span>}
+                </div>
+
+                {/* 승인 반려 처리 되었을 경우 */}
+                {applier.regStatus === "ACCEPTED" && <div>현재 승인 되었습니다.</div>}
+                {applier.regStatus === "REJECTED" && <div>현재 반려 되었습니다.</div>}
                 {/* 버튼들 */}
                 <div className="flex gap-4 mt-6 justify-between">
                     <button
                         onClick={handleMoveToList}
-                        className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 transition duration-200"
+                        className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-200"
                     >
                         목록
                     </button>
-                    <div className="flex gap-3">
-                        <button
-                            onClick={() => handleClickStatus(1)}
-                            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50 transition duration-200"
-                        >
-                            승인
-                        </button>
 
-                        <button
-                            onClick={() => handleClickStatus(2)}
-                            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-opacity-50 transition duration-200"
-                        >
-                            반려
-                        </button>
-                    </div>
+                    {applier.regStatus === "PENDING" && (
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => handleClickStatus(1)}
+                                className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200"
+                            >
+                                승인
+                            </button>
+                            <button
+                                onClick={() => setRejectModal(true)}
+                                className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200"
+                            >
+                                반려
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
 
             {/* 알림 모달 */}
             {modalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30">
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
                     <div className="flex flex-col justify-center bg-white p-8 rounded-lg shadow-lg">
                         <p className="text-xl">{modalMessage}</p>
                         <button
                             onClick={closeModal}
-                            className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 transition duration-200"
+                            className="mt-4 px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-200"
                         >
                             확인
                         </button>
                     </div>
                 </div>
             )}
+
+            {/* 반려 사유 모달 */}
+            {rejectModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm mx-auto">
+                        <h3 className="text-lg font-semibold">반려 사유 입력</h3>
+                        <textarea
+                            value={rejectReason}
+                            onChange={(e) => setRejectReason(e.target.value)}
+                            rows={4}
+                            className="w-full p-4 mt-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <div className="mt-4 flex gap-3">
+                            <button
+                                onClick={() => setRejectModal(false)}
+                                className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-200"
+                            >
+                                취소
+                            </button>
+                            <button
+                                onClick={() => handleClickStatus(2)}
+                                className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200"
+                            >
+                                반려 처리
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
-}
+};
 
 export default ApplierReadComponent;

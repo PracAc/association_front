@@ -1,52 +1,64 @@
-import {useState} from "react";
+import { useState } from "react";
 import Depth2Menu from "./Depth2Menu.tsx";
 
-const ChevronDown = () => (
-    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/>
+interface subMenusProps {
+    name: string;
+    toPath: string;
+}
+
+interface Depth1MenuProps {
+    mainName: string;
+    subMenus: subMenusProps[];
+    basicPath: string;
+    iconName: string;
+}
+
+const ChevronDownIcon = () => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-5 h-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+    >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
     </svg>
 );
 
-interface subMenusProps{
-    name: string,
-    toPath:string
-}
-// 타입에러 처리 - props 객체 기본 타입 지정
-interface Depth1MenuProps {
-    mainName:string,
-    subMenus:subMenusProps[],
-    basicPath:string,
-    iconName:string
-}
+const ChevronUpIcon = () => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-5 h-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+    >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+    </svg>
+);
 
-function Depth1Menu({mainName,subMenus,basicPath,iconName}:Depth1MenuProps) {
+function Depth1Menu({ mainName, subMenus, basicPath, iconName }: Depth1MenuProps) {
+    const [isToggle, setIsToggle] = useState(false);
 
-    const [isToggle,setIsToggle] = useState(false)
-
-    const isToggleOpen = () => {
-        setIsToggle(!isToggle)
-    }
-
-    const iconPath = `/src/assets/img/icons/${iconName}`
-
-    const subMenuNames = {subMenus,basicPath}
+    const iconPath = `/src/assets/img/icons/${iconName}`;
 
     return (
-        <li className="relative px-6 py-3">
+        <li className="relative px-4 py-3">
             <button
-                onClick={isToggleOpen}
-                className="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-neutral-800"
+                onClick={() => setIsToggle(!isToggle)}
+                className="flex items-center justify-between w-full text-base font-semibold text-gray-700 hover:text-blue-700 transition-colors duration-300"
             >
-                <img src={iconPath} alt="Arrow Icon" className="w-5 h-5"/>
-                <span className="inline-flex items-center">
-                    <span className="ml-4 text-blue-950">{mainName}</span>
-                </span>
-                <span
-                    className={`transition-transform duration-200 ${isToggle ? 'transform rotate-180' : ''}`}>
-                                <ChevronDown/>
-                </span>
+                <div className="flex items-center">
+                    <img src={iconPath} alt={`${mainName} Icon`} className="w-6 h-6 mr-3" />
+                    <span>{mainName}</span>
+                </div>
+                <div className="transition-transform duration-200">
+                    {isToggle ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                </div>
             </button>
-            {isToggle && (<Depth2Menu {...subMenuNames}></Depth2Menu>)}
+            {isToggle && <Depth2Menu subMenus={subMenus} basicPath={basicPath} />}
         </li>
     );
 }

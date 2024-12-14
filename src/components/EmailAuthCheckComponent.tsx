@@ -3,7 +3,7 @@ import LoadingComponent from "./common/LoadingComponent.tsx";
 import {useParams} from "react-router-dom";
 import {checkApplierAuth} from "../apis/applierAPI.ts";
 
-function AuthCheckComponent() {
+function EmailAuthCheckComponent() {
     const {ano} = useParams();
     // 이메일 입력 상태
     const [email, setEmail] = useState("");
@@ -113,4 +113,4 @@ function AuthCheckComponent() {
     );
 }
 
-export default AuthCheckComponent;
+export default EmailAuthCheckComponent;

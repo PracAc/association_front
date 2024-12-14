@@ -1,8 +1,7 @@
-import {Outlet} from "react-router-dom";
 import AdminMainLayout from "../../layouts/AdminMainLayout.tsx";
+import {Outlet} from "react-router-dom";
 
-
-function ApplierIndex() {
+function AdminIndex() {
     return (
         <AdminMainLayout>
             <div>
@@ -12,4 +11,4 @@ function ApplierIndex() {
     );
 }
 
-export default ApplierIndex;
+export default AdminIndex;

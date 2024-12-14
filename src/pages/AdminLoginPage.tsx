@@ -2,7 +2,6 @@ import SigninComponent from "../components/adminlogin/SigninComponent.tsx";
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {useAppSelector} from "../hooks/rtk.ts";
-import BasicLayout from "../layouts/MainLayout.tsx";
 
 
 function AdminLoginPage() {
@@ -16,16 +15,14 @@ function AdminLoginPage() {
     }, [loginInfo]); // adminlogin 전체를 의존성 배열에 넣어 상태 변경을 감지
 
     if (isRedirecting) {
-        return <Navigate to="/applier/list" replace />; // 리디렉션 처리
+        return <Navigate to="/admin/main" replace={true} />; // 리디렉션 처리
     }
 
     return (
 
-    <BasicLayout>
         <div className="flex justify-center items-center min-h-screen bg-gray-100">
             <SigninComponent />
         </div>
-    </BasicLayout>
     );
 }
 

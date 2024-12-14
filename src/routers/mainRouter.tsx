@@ -5,7 +5,7 @@ import {lazy, Suspense} from "react";
 const LoadingPage = lazy(() => import("../pages/LoadingPage.tsx"))
 const LoginPage = lazy(() => import("../pages/AdminLoginPage.tsx"))
 const RegisterPage = lazy(() => import("../pages/RegisterPage.tsx"))
-const AuthCheckPage = lazy(() => import("../pages/AuthCheckPage.tsx"))
+const AuthCheckPage = lazy(() => import("../pages/EmailAuthCheckPage.tsx"))
 const ApplierIndex = lazy(() => import("../pages/applier/ApplierIndex.tsx"))
 const ApplierListPage = lazy(() => import("../pages/applier/ApplierListPage.tsx"))
 const ApplierReadPage = lazy(() => import("../pages/applier/ApplierReadPage.tsx"))
@@ -33,6 +33,20 @@ const mainRouter = createBrowserRouter([
     {
         path: "/register",
         element: <Suspense fallback={Loading}><RegisterPage/></Suspense>
+    },
+    {
+        path: "/admin",
+        element: <Suspense fallback={Loading}><ApplierIndex/></Suspense>,
+        children:[
+            {
+                path: "",
+                element: <Navigate to="main" replace={true}></Navigate>
+            },
+            {
+                path:"main",
+                element: <Suspense fallback={Loading}><ApplierMainPage/></Suspense>
+            }
+        ]
     },
     {
         path: "/applier",
