@@ -1,4 +1,4 @@
-import logo from "../../assets/img/background/logo.png";
+import logo from "../../assets/img/logo.png"
 
 function MainHeaderComponent() {
     return (
