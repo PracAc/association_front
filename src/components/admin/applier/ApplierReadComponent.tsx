@@ -1,8 +1,8 @@
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import LoadingComponent from "../common/LoadingComponent.tsx";
-import { IApplierRead } from "../../types/applier/applier.ts";
-import { getApplier, modifyApplierStatus } from "../../apis/applierAPI.ts";
+import LoadingComponent from "../../common/LoadingComponent.tsx";
+import { IApplierRead } from "../../../types/applier/applier.ts";
+import { getApplier, modifyApplierStatus } from "../../../apis/applierAPI.ts";
 
 const InitialApplier: IApplierRead = {
     ano: 0,

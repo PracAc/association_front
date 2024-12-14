@@ -1,12 +1,12 @@
 import Depth1Menu from "./Depth1Menu.tsx";
-import {useAppSelector} from "../../hooks/rtk.ts";
+import {useAppSelector} from "../../../hooks/rtk.ts";
 
 function AsideMenuComponent() {
     const menus = [
         {
             mainName: "신청관리",
             subMenus: [{ name: "신청목록", toPath: "/list" }],
-            basicPath: "/applier",
+            basicPath: "/admin/applier",
             iconName: "users.png",
         }
     ];

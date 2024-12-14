@@ -206,7 +206,7 @@ function RegisterComponent() {
 
         setTimeout(() => {
             setLoading(false);
-            setModalMessage("사업자 등록번호 인증 혹은 이메일을 확인 해주시길바랍니다")
+            setModalMessage("이메일 혹은 전화번호를 확인 해주시길바랍니다")
             setModalOpen(true);
         }, 400);
         return

@@ -1,10 +1,10 @@
 import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { IPageResponse } from "../../types/pageResponse.ts";
-import { IApplierList } from "../../types/applier/applier.ts";
-import LoadingComponent from "../common/LoadingComponent.tsx";
-import { getApplierList } from "../../apis/applierAPI.ts";
-import PageComponent from "../common/PageComponent.tsx";
+import { IPageResponse } from "../../../types/pageResponse.ts";
+import { IApplierList } from "../../../types/applier/applier.ts";
+import LoadingComponent from "../../common/LoadingComponent.tsx";
+import { getApplierList } from "../../../apis/applierAPI.ts";
+import PageComponent from "../../common/PageComponent.tsx";
 
 const initialState: IPageResponse<IApplierList> = {
     dtoList: [],

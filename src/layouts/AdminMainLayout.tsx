@@ -2,9 +2,9 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { signout } from "../slices/signinSlice";
 import Cookies from "js-cookie";
-import AsideMenuComponent from "../components/common/AsideMenuComponent.tsx";
+import AsideMenuComponent from "../components/common/admin/AsideMenuComponent.tsx";
 import { useNavigate } from "react-router-dom";
-import CheckAuth from "../components/common/CheckAuth.tsx";
+import CheckAuth from "../components/common/admin/CheckAuth.tsx";
 
 function AdminMainLayout({ children }: { children: React.ReactNode }) {
     const dispatch = useDispatch();

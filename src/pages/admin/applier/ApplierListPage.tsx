@@ -1,5 +1,5 @@
 
-import ApplierListComponent from "../../components/applier/ApplierListComponent.tsx";
+import ApplierListComponent from "../../../components/admin/applier/ApplierListComponent.tsx";
 
 function ApplierListPage() {
     return (
