@@ -25,7 +25,7 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ec2-user@3.34.196.212 \
-          "cd /cd /home/ec2-user/association_front  && \
+          "cd /home/ec2-user/association_front && \
           git pull origin master && \
           docker-compose down && \
           docker-compose up -d --build"
