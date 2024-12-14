@@ -33,8 +33,8 @@ function EmailAuthCheckComponent() {
                     setLoading(false);
                 }, 200);
                 // 추후 성공시만 초기화 되게 설정
-                // setEmail("");
-                // setAuthCode("");
+                setEmail("");
+                setAuthCode("");
             })
             .catch(() => {
                 setModalMessage("오류로 인해 처리가 되지않았습니다.\n다시 시도해주시길 바랍니다.");

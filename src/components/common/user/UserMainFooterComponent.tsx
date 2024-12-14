@@ -1,5 +1,6 @@
 import { FaFacebook, FaTwitter, FaInstagram, FaGithub } from 'react-icons/fa';
 import {Link} from "react-router-dom";
+import logo from "../../../assets/img/logo.png"
 
 function UserMainFooterComponent() {
     return (
@@ -9,7 +10,7 @@ function UserMainFooterComponent() {
                 {/* 로고 - 좌측 최상단 */}
                 <div className="flex-shrink-0 mb-4 md:mb-0">
                     <Link to="/main">
-                        <img src="/src/assets/img/logo.png" alt="부산 지역아티스트 협회 로고" className="w-[20rem]" />
+                        <img src={logo} alt="부산 지역아티스트 협회 로고" className="w-[20rem]" />
                     </Link>
                 </div>
 

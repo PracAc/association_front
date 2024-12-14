@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useState} from "react";
 import Depth2Menu from "./Depth2Menu.tsx";
 
 interface subMenusProps {
@@ -42,7 +42,9 @@ const ChevronUpIcon = () => (
 function Depth1Menu({ mainName, subMenus, basicPath, iconName }: Depth1MenuProps) {
     const [isToggle, setIsToggle] = useState(false);
 
-    const iconPath = `/src/assets/img/icons/${iconName}`;
+    // const iconPath = `/src/assets/img/icons/${iconName}`;
+    const iconPath = `/assets/img/icons/${iconName}`;
+
 
     return (
         <li className="relative px-4 py-3">
