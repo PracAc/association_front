@@ -14,8 +14,9 @@ export interface IApplierRead {
     openDate: string;
     name: string;
     email: string;
+    snsAddr: string;
 
-    applierStatus: string;
+    regStatus: string;
 
     attachFileNames: string[];
 

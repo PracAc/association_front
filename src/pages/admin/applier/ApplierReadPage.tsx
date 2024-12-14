@@ -1,5 +1,5 @@
 
-import ApplierReadComponent from "../../components/applier/ApplierReadComponent.tsx";
+import ApplierReadComponent from "../../../components/admin/applier/ApplierReadComponent.tsx";
 
 
 function ApplierReadPage() {
