@@ -23,7 +23,7 @@ function RegisterComponent() {
     // 사업자 등록증 진위여부 타입 상태
     const [bizChk, setBizChk] = useState<IBizChk>(initialBizChk);
 
-    // 사업자 등록증 진위여부 타입 상태
+    // 일반 제작자 타입 상태
     const [noBizChk, setNoBizChk] = useState<INoBizChk>(initialNoBizChk);
 
     // 사업자 등록증 인증 여부 상태
@@ -154,6 +154,11 @@ function RegisterComponent() {
                 setModalOpen(true);
                 return;
             }
+            if (!noBizChk.s_link) {
+                setModalMessage("SNS 주소를 입력 해주세요.")
+                setModalOpen(true);
+                return;
+            }
         }
 
         // 기본 값 유효성 확인
@@ -201,7 +206,7 @@ function RegisterComponent() {
 
         setTimeout(() => {
             setLoading(false);
-            setModalMessage("사업자 등록번호 인증 혹은 이메일을 확인 해주시길바랍니다")
+            setModalMessage("이메일 혹은 전화번호를 확인 해주시길바랍니다")
             setModalOpen(true);
         }, 400);
         return

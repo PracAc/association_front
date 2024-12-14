@@ -1,30 +1,16 @@
-import React from 'react';
+import UserHeaderComponent from "../components/common/user/UserHeaderComponent.tsx";
+import UserMainFooterComponent from "../components/common/user/UserMainFooterComponent.tsx";
 
-import NaviBar from "../components/common/NaviBar.tsx";
 
-
-function BasicLayout({children}: { children: React.ReactNode }) {
-
-    // const {doSignout} = useSignin();
-    // const navigate = useNavigate();
+function MainLayout({children}: { children: React.ReactNode }) {
 
     return (
-        <>
-            <NaviBar/>
-            <div className={`flex h-screen bg-gray-50 max-w-[120rem] m-auto`}>
-                {/* Desktop sidebar */}
-                {/*<AsideMenuComponent></AsideMenuComponent>*/}
-
-                <div className="flex flex-col flex-1 w-full">
-                    <main className="h-full overflow-y-auto">
-                        <div className="container px-2 mx-auto grid m-1">
-                            {children}
-                        </div>
-                    </main>
-                </div>
-            </div>
-        </>
+        <div>
+            <UserHeaderComponent/>
+             {children}
+            <UserMainFooterComponent/>
+        </div>
     );
 }
 
-export default BasicLayout;
+export default MainLayout;

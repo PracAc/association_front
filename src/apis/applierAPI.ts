@@ -1,10 +1,15 @@
 import axios from "axios";
 import jwtAxios from "../util/jwtUtil.ts";
 
+const host = "http://3.36.52.117:8080/api/association/applier"
 
-const host = "http://localhost:8080/api/association/applier"
-
-export const getApplierList = async (page?: number, size?: number, filters?: {}) => {
+export const getApplierList = async (page?: number, size?: number, filters?: {
+    bizNo: string;
+    regStatus: string;
+    ano: string;
+    name: string;
+    regDate: string
+}) => {
     const pageValue = page || 1;
     const sizeValue = size || 10;
 
@@ -23,6 +28,7 @@ export const getApplierList = async (page?: number, size?: number, filters?: {})
             }
         }
     }
+    console.log(queryParams)
 
     const res = await jwtAxios.get(`${host}/list?${queryParams.toString()}`);
     return res.data;
@@ -40,10 +46,15 @@ export const registryApplier = async (formData: FormData) => {
     return res.data
 }
 
-export const modifyApplierStatus = async (ano: number, status: number) => {
-    const req = {
+export const modifyApplierStatus = async (ano: number, status: number, rejectReason?: string) => {
+    const req: { ano: number; status: number; rejectReason?: string } = {
         ano: ano,
-        status: status
+        status: status,
+    };
+
+    // status가 2일 경우에만 rejectReason을 포함
+    if (status === 2 && rejectReason) {
+        req.rejectReason = rejectReason;
     }
     const res = await jwtAxios.put(`${host}/modify`, req)
 

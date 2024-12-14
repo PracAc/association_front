@@ -1,6 +1,6 @@
-import { ISigninParam } from "../../types/iadminlogin.ts";
+import { ISigninParam } from "../../../types/iadminlogin.ts";
 import { ChangeEvent, useEffect, useState } from "react";
-import useSignin from "../../hooks/useSignin.ts";
+import useSignin from "../../../hooks/useSignin.ts";
 import {useLocation} from "react-router-dom";
 
 const initialState: ISigninParam = {
@@ -8,7 +8,7 @@ const initialState: ISigninParam = {
     pw: ''
 }
 
-function SigninComponent() {
+function LoginComponent() {
     const [param, setParam] = useState(initialState)
     const { doSignin } = useSignin()
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -60,7 +60,8 @@ function SigninComponent() {
 
     return (
         <div className="flex flex-col items-center w-full justify-center min-h-screen bg-white p-6">
-            <h1 className="text-3xl font-extrabold text-gray-800 text-center mb-8">협회 관리자 로그인</h1>
+            <h1 className="text-3xl font-extrabold text-gray-800 text-center mb-8">부산 지역 아티스트 협회</h1>
+            <h1 className="text-2xl font-extrabold text-gray-800 text-center mb-8">관리자 로그인</h1>
             <div className="w-full max-w-lg bg-white rounded-2xl overflow-hidden p-8">
 
                 {errorMessage && (
@@ -115,4 +116,4 @@ function SigninComponent() {
     );
 }
 
-export default SigninComponent;
+export default LoginComponent;
