@@ -37,7 +37,7 @@ const ApplierReadComponent = () => {
 
     // 목록 이동 버튼 함수
     const handleMoveToList = () => {
-        navigate(`/applier/list?${queryStr}`);
+        navigate(`/admin/applier/list?${queryStr}`);
     };
 
     // 승인, 반려 버튼 함수
