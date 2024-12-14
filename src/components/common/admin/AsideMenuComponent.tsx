@@ -1,5 +1,7 @@
 import Depth1Menu from "./Depth1Menu.tsx";
 import {useAppSelector} from "../../../hooks/rtk.ts";
+import defaultUser from "../../../assets/img/defaultUser.jpg"
+import logo from "../../../assets/img/logo.png"
 
 function AsideMenuComponent() {
     const menus = [
@@ -17,10 +19,10 @@ function AsideMenuComponent() {
     return (
         <aside className="z-20 hidden w-64 bg-gray-100 md:block flex-shrink-0 border-r border-gray-200 shadow-sm">
             <div className="flex flex-col gap-4 py-6 text-center">
-                <img src="/src/assets/img/logo.png" alt=""/>
+                <img src={logo} alt=""/>
                 <span className="block text-lg font-bold text-blue-600">관리자 페이지</span>
                 <div className="flex flex-col items-center gap-2">
-                    <img className="rounded-full w-24 h-24" src="/src/assets/img/defaultUser.jpg" alt="기본 유저이미지"/>
+                    <img className="rounded-full w-24 h-24" src={defaultUser} alt="기본 유저이미지"/>
                     <span>관리자 <span className="font-semibold">{adminName}</span> 님</span>
                 </div>
             </div>
