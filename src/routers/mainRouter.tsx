@@ -9,6 +9,7 @@ const AuthCheckPage = lazy(() => import("../pages/EmailAuthCheckPage.tsx"))
 const ApplierIndex = lazy(() => import("../pages/applier/ApplierIndex.tsx"))
 const ApplierListPage = lazy(() => import("../pages/applier/ApplierListPage.tsx"))
 const ApplierReadPage = lazy(() => import("../pages/applier/ApplierReadPage.tsx"))
+const ApplierMainPage = lazy(() => import("../pages/ApplierMainPage.tsx"))
 const AdminMainPage = lazy(() => import("../pages/admin/AdminMainPage.tsx"))
 
 
@@ -26,6 +27,10 @@ const mainRouter = createBrowserRouter([
     {
         path: "/auth/:ano",
         element: <Suspense fallback={Loading}><AuthCheckPage/></Suspense>
+    },
+    {
+        path:"/main",
+        element: <Suspense fallback={Loading}><ApplierMainPage/></Suspense>
     },
     {
         path: "/register",
