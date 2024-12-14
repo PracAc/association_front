@@ -4,6 +4,7 @@ function ApplierMainComponent() {
     return (
         <div className="h-screen w-screen flex flex-col">
             {/* Main Content */}
+
             <main className="flex-grow relative w-full h-screen">
                 {/* 이미지 영역 */}
                 <video
