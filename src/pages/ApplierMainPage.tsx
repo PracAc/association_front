@@ -1,11 +1,12 @@
 import ApplierMainComponent from "../components/applier/ApplierMainComponent.tsx";
+import MainLayout from "../layouts/MainLayout.tsx";
 
 
 function ApplierMainPage() {
     return (
-            <div>
+        <MainLayout>
                 <ApplierMainComponent/>
-            </div>
+        </MainLayout>
     );
 }
 
