@@ -1,39 +1,31 @@
-name: React App CI/CD Pipeline
+name: Deploy to EC2
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - main  # master 브랜치에 푸시될 때 실행
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    environment: EC2_SSH_KEY  # GitHub Environment 지정
 
     steps:
-      # 1. Check out the code from GitHub
+      # 1. GitHub 리포지토리 체크아웃
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      # 2. Set up Node.js and install dependencies
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      # 2. SSH 에이전트 설정
+      - name: Set up SSH connection
+        uses: webfactory/ssh-agent@v0.5.3
         with:
-          node-version: '16' # 사용할 Node.js 버전
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: Install dependencies
-        run: npm install
-
-      # 3. Set up environment variables from GitHub Secrets and create .env file
-      - name: Create .env file for React app
-        run: echo "VITE_BIZ_SERVICE_KEY=${{ secrets.VITE_BIZ_SERVICE_KEY }}" > .env
-
-      # 3. Run tests
-      - name: Run tests
-        run: npm test -- --ci --silent
-
-      # 4. Build the app for production
-      - name: Build the app
-        run: npm run build
+      # 3. EC2에 접속하여 배포 작업 수행
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ec2-user@3.34.196.212 \
+          "cd /home/ec2-user/association/association_front && \
+          git pull origin master && \
+          docker-compose down && \
+          docker-compose up -d --build"
