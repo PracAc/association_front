@@ -1,14 +1,14 @@
-import MainHeaderComponent from "../components/common/MainHeaderComponent.tsx";
-import MainFooterComponent from "../components/common/MainFooterComponent.tsx";
+import UserHeaderComponent from "../components/common/user/UserHeaderComponent.tsx";
+import UserMainFooterComponent from "../components/common/user/UserMainFooterComponent.tsx";
 
 
 function MainLayout({children}: { children: React.ReactNode }) {
 
     return (
         <div>
-            <MainHeaderComponent/>
+            <UserHeaderComponent/>
              {children}
-            <MainFooterComponent/>
+            <UserMainFooterComponent/>
         </div>
     );
 }

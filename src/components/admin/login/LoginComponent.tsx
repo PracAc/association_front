@@ -1,6 +1,6 @@
-import { ISigninParam } from "../../types/iadminlogin.ts";
+import { ISigninParam } from "../../../types/iadminlogin.ts";
 import { ChangeEvent, useEffect, useState } from "react";
-import useSignin from "../../hooks/useSignin.ts";
+import useSignin from "../../../hooks/useSignin.ts";
 import {useLocation} from "react-router-dom";
 
 const initialState: ISigninParam = {
@@ -8,7 +8,7 @@ const initialState: ISigninParam = {
     pw: ''
 }
 
-function SigninComponent() {
+function LoginComponent() {
     const [param, setParam] = useState(initialState)
     const { doSignin } = useSignin()
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -116,4 +116,4 @@ function SigninComponent() {
     );
 }
 
-export default SigninComponent;
+export default LoginComponent;

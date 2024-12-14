@@ -80,7 +80,7 @@ const failRes = async (error: any) => {
         }
     } else {
         console.error("Error in response:", error.response?.data?.msg);
-        window.location.href = "/login";
+        window.location.href = "/adminlogin";
         return Promise.reject(error);
     }
 };

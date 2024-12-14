@@ -1,6 +1,6 @@
 
 //로그인이 안되어 있는데 로그인이 필요한 창이면 무조건 로그인창으로 튕기게 하기.
-import useSignin from "../../hooks/useSignin.ts";
+import useSignin from "../../../hooks/useSignin.ts";
 import {Navigate} from "react-router-dom";
 
 function CheckAuth({children}: {children: React.ReactNode}) {
@@ -8,7 +8,7 @@ function CheckAuth({children}: {children: React.ReactNode}) {
     const {adminlogin} = useSignin()
 
     if(!adminlogin){
-        return <Navigate to={'/login'} replace={true}></Navigate>
+        return <Navigate to={'/adminlogin'} replace={true}></Navigate>
     }
 
     return(

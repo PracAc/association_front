@@ -1,6 +1,7 @@
-import video from  "../../assets/video/vider.mp4"
+import video from "../../assets/video/vider.mp4"
+import {Link} from "react-router-dom";
 
-function ApplierMainComponent() {
+function UserMainComponent() {
     return (
         <div className="h-screen w-screen flex flex-col">
             {/* Main Content */}
@@ -24,14 +25,15 @@ function ApplierMainComponent() {
                 </div>
 
                 {/* 등록하기 버튼 */}
-                <button
-                    className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-16 py-6 text-xl rounded hover:bg-blue-700"
+                <Link
+                    to="/register"
+                    className="absolute bottom-14 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-16 py-6 text-xl rounded hover:bg-blue-700"
                 >
                     등록하기
-                </button>
+                </Link>
             </main>
         </div>
     );
 }
 
-export default ApplierMainComponent;
+export default UserMainComponent;
