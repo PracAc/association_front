@@ -26,6 +26,6 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ec2-user@3.34.196.212 \
           "cd /home/ec2-user/association_front && \
-          git pull origin master && \
+          git pull origin main && \
           docker-compose down && \
           docker-compose up -d --build"
