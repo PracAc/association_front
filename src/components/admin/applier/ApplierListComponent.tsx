@@ -64,7 +64,7 @@ function ApplierListComponent() {
         });
 
         navigate({
-            pathname: `/applier/read/${ano}`,
+            pathname: `/admin/applier/read/${ano}`,
             search: `${queryStr}`
         });
     };
