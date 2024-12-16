@@ -87,12 +87,14 @@ function ApplierListComponent() {
         getApplierList(page, size, filters).then((data) => {
             setPageResponse(data);
             setTimeout(() => setLoading(false), 400);
+            console.log(data)
         });
     }, [page, size]);
 
     const ListDiv =
         Array.isArray(pageResponse.dtoList) && pageResponse.dtoList.length > 0 && (
             pageResponse.dtoList.map((applier) => {
+                console.log(applier)
                 const { ano, name, bizNo, regDate, regStatus } = applier;
                 return (
                     <div
