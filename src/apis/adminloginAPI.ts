@@ -3,7 +3,7 @@ import {IAdminlogin, ISigninParam} from "../types/iadminlogin.ts";
 import axios from "axios";
 import jwtAxios from "../util/jwtUtil.ts";
 
-const host = 'api/association/login'
+const host = '/api/association/login'
 
 export const postSignin = async (param: ISigninParam): Promise<IAdminlogin> => {
     try {
