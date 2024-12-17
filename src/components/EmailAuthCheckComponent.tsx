@@ -2,6 +2,7 @@ import {useState} from "react";
 import LoadingComponent from "./common/LoadingComponent.tsx";
 import {useParams} from "react-router-dom";
 import {checkApplierAuth} from "../apis/applierAPI.ts";
+import logo from "../assets/img/logo.png"
 
 function EmailAuthCheckComponent() {
     const {ano} = useParams();
@@ -48,45 +49,50 @@ function EmailAuthCheckComponent() {
 
 
             {/* 중간 영역 */}
-            <div className="w-1/2 max-w-full bg-white pt-5 pb-5 mx-auto  shadow-md">
+            <div className="w-1/2 max-w-full flex flex-col items-center justify-center bg-white pt-5 pb-5 mx-auto  shadow-md">
                 {/* 로딩 상태 */}
                 {loading && (
                     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
                         <LoadingComponent/>
                     </div>
                 )}
+                {/* 헤더영역 */}
+                <div className="flex justify-center items-center flex-col mb-8">
+                    <img src={logo} alt="협회 이미지" className="w-[20rem] mb-4" />
+                    <span className="text-2xl font-semibold text-gray-800">등록 인증</span>
+                </div>
 
-                <div className="px-36 space-y-2">
+                <div className="w-full px-8 md:px-20 space-y-6">
                     {/* 이메일 입력 */}
-                    <div className="flex flex-col mb-4 mt-40">
-                        <label className="text-gray-700 font-semibold">이메일 주소</label>
+                    <div className="flex flex-col mb-4">
+                        <label className="text-gray-700 font-semibold text-lg">이메일 주소</label>
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="이메일을 입력하세요"
-                            className="px-4 py-2 border border-gray-300 rounded-md"
+                            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
                     </div>
 
                     {/* 인증 코드 입력 */}
                     <div className="flex flex-col mb-4">
-                        <label className="text-gray-700 font-semibold">인증 코드</label>
+                        <label className="text-gray-700 font-semibold text-lg">인증 코드</label>
                         <input
                             type="text"
                             value={authCode}
                             onChange={(e) => setAuthCode(e.target.value)}
                             placeholder="인증 코드를 입력하세요"
-                            className="px-4 py-2 border border-gray-300 rounded-md"
+                            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
                     </div>
 
                     {/* 이메일 인증 코드 전송 버튼 */}
-                    <div className="flex justify-between gap-4">
+                    <div className="flex justify-center gap-4">
                         <button
                             onClick={handleVerifyCode}
                             disabled={loading || !authCode}
-                            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                            className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-200"
                         >
                             인증 코드 확인
                         </button>
