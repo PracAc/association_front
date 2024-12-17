@@ -1,4 +1,4 @@
-import video from "../../assets/video/vider.mp4";
+import video from "../../assets/video/video7.mp4";
 import { Link } from "react-router-dom";
 
 function UserMainComponent() {
