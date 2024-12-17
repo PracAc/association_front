@@ -19,7 +19,7 @@ function UserMainComponent() {
 
                 {/* 텍스트 영역 */}
                 <div
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center px-6 sm:px-12 md:px-16"
+                    className="absolute text-wrap sm:text-nowrap top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center px-6 sm:px-12 md:px-16"
                 >
                     자신만의 특별한 작품을 인증받아보세요
                 </div>
