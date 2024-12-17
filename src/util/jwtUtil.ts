@@ -75,7 +75,7 @@ const failRes = async (error: any) => {
         } catch (refreshError) {
             console.error("Failed to refresh token:", refreshError);
             cookies.remove("adminlogin", { path: "/" });
-            window.location.href = "/login?error=all";
+            window.location.href = "/adminlogin?error=all";
             return Promise.reject(refreshError);
         }
     } else {

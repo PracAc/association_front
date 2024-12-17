@@ -19,7 +19,7 @@ export const postSignin = async (param: ISigninParam): Promise<IAdminlogin> => {
         return result.data;
     } catch (exception: any) {
         console.error(exception.response.data.message); // 에러 로그 추가
-        window.location.href = "/login?error=incorrect"
+        window.location.href = "/adminlogin?error=incorrect"
         throw exception;
     }
 }
