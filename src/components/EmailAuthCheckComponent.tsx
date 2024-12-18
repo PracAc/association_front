@@ -45,11 +45,8 @@ function EmailAuthCheckComponent() {
     };
 
     return (
-        <div className="flex w-full  min-h-screen bg-gray-100">
-
-
-            {/* 중간 영역 */}
-            <div className="w-1/2 max-w-full flex flex-col items-center justify-center bg-white pt-5 pb-5 mx-auto  shadow-md">
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="max-w-3xl w-full p-8 bg-white rounded-xl border border-white">
                 {/* 로딩 상태 */}
                 {loading && (
                     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
@@ -58,7 +55,7 @@ function EmailAuthCheckComponent() {
                 )}
                 {/* 헤더영역 */}
                 <div className="flex justify-center items-center flex-col mb-8">
-                    <img src={logo} alt="협회 이미지" className="w-[20rem] mb-4" />
+                    <img src={logo} alt="협회 이미지" className="w-[20rem] mb-4"/>
                     <span className="text-2xl font-semibold text-gray-800">등록 인증</span>
                 </div>
 
