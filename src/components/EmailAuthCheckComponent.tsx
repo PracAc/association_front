@@ -29,7 +29,7 @@ function EmailAuthCheckComponent() {
         checkApplierAuth(Number(ano), email, authCode)
             .then((resMsg) => {
                 setTimeout(() => {
-                    setModalMessage(resMsg);
+                    setModalMessage(`${resMsg} \n해당 이메일로 아이디와 비밀번호가 발급되었습니다.`);
                     setIsModalOpen(true);
                     setLoading(false);
                 }, 200);
