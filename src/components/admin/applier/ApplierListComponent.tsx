@@ -98,7 +98,7 @@ function ApplierListComponent() {
                     <div
                         key={ano}
                         onClick={() => moveToRead(ano)}
-                        className="grid grid-cols-12 border border-b-0 border-gray-400 text-center text-sm text-gray-600 uppercase tracking-wider">
+                        className="grid grid-cols-12 border border-b-0 border-gray-400 text-center text-sm text-gray-600 uppercase tracking-wider hover:cursor-pointer">
                         <div className="col-span-2 h-full p-3 flex justify-center items-center border-r border-gray-400">
                             <span>{ano}</span>
                         </div>
