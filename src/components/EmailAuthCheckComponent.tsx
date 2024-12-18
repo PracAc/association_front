@@ -46,13 +46,13 @@ function EmailAuthCheckComponent() {
 
     return (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            {loading &&
+                <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+                    <LoadingComponent/>
+                </div>
+            }
             <div className="max-w-3xl w-full p-8 bg-white rounded-xl border border-white">
                 {/* 로딩 상태 */}
-                {loading && (
-                    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-                        <LoadingComponent/>
-                    </div>
-                )}
                 {/* 헤더영역 */}
                 <div className="flex justify-center items-center flex-col mb-8">
                     <img src={logo} alt="협회 이미지" className="w-[20rem] mb-4"/>

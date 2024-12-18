@@ -218,7 +218,12 @@ function RegisterComponent() {
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="max-w-3xl w-full p-8 bg-white rounded-xl border border-white">
 
-                {loading && <LoadingComponent/>}
+                {loading &&
+                    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+                        <LoadingComponent/>
+                    </div>
+                }
+
                 <div className="flex justify-between items-center">
                     <h2 className="text-3xl font-semibold text-gray-800">협회 등록 신청</h2>
                     <div className="p-4 cursor-pointer" onClick={() => navigate('/')}>
