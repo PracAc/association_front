@@ -62,6 +62,9 @@ function RegisterComponent() {
         setEmailAuthCode("")
         setEmailVerified(null)
         setUserPhone("")
+        if (filesRef.current) {
+            filesRef.current.value = ''; // 파일 입력 초기화
+        }
     }
 
     // 알림 모달 닫기
