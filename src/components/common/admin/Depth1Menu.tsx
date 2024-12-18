@@ -43,7 +43,7 @@ function Depth1Menu({ mainName, subMenus, basicPath, iconName }: Depth1MenuProps
     const [isToggle, setIsToggle] = useState(false);
 
     // const iconPath = `/src/assets/img/icons/${iconName}`;
-    const iconPath = `/assets/img/icons/${iconName}`;
+    const iconPath = `https://www.busosi.com/assets/img/icons/${iconName}`;
 
 
     return (
