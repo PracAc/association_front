@@ -42,7 +42,7 @@ const ChevronUpIcon = () => (
 function Depth1Menu({ mainName, subMenus, basicPath, iconName }: Depth1MenuProps) {
     const [isToggle, setIsToggle] = useState(false);
 
-    const iconPath = `/assets/img/icons/${iconName}`;
+    const iconPath = `/img/icons/${iconName}`;
 
 
     return (
