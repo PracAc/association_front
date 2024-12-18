@@ -152,11 +152,13 @@ function RegisterComponent() {
         // 사업자등록번호 없을 경우 확인
         if (!hasBizNo) {
             if (!noBizChk.name) {
+                setLoading(false);
                 setModalMessage("이름을 입력 해주세요.")
                 setModalOpen(true);
                 return;
             }
             if (!noBizChk.s_link) {
+                setLoading(false);
                 setModalMessage("SNS 주소를 입력 해주세요.")
                 setModalOpen(true);
                 return;
